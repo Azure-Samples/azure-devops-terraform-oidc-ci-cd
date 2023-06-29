@@ -75,8 +75,6 @@ stages:
   displayName: Deploy to Test
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   dependsOn: deploy_to_dev
-  pool: 
-    name: agent-pool-test 
   variables:
     - group: test
     - name: serviceConnection
@@ -85,7 +83,7 @@ stages:
     - deployment: deploy
       displayName: Deploy with Terraform
       pool: 
-        vmImage: ubuntu-latest
+        name: agent-pool-test 
       environment: test
       strategy:
         runOnce:
