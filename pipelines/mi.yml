@@ -1,4 +1,5 @@
-trigger: none
+trigger: 
+- main
 
 variables:
   - name: workingDirectory
@@ -73,7 +74,7 @@ stages:
       
 - stage: deploy_to_test
   displayName: Deploy to Test
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: ne(variables['Build.Reason'], 'PullRequest')
   dependsOn: deploy_to_dev
   variables:
     - group: test
@@ -117,7 +118,7 @@ stages:
 
 - stage: deploy_to_prod
   displayName: Deploy to Prod
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: ne(variables['Build.Reason'], 'PullRequest')
   dependsOn: deploy_to_test
   variables:
     - group: prod
