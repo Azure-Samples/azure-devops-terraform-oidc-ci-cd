@@ -1,5 +1,9 @@
+locals {
+  app_registration_environments = local.security_option.oidc_with_app_registration ? { for env in var.environments : env => env } : {}
+}
+
 resource "azuread_application" "github_oidc" {
-  for_each     = var.use_managed_identity ? {} : { for env in var.environments : env => env }
+  for_each     = local.app_registration_environments
   display_name = "${var.prefix}-${each.value}"
 
   api {
@@ -8,12 +12,12 @@ resource "azuread_application" "github_oidc" {
 }
 
 resource "azuread_service_principal" "github_oidc" {
-  for_each       = var.use_managed_identity ? {} : { for env in var.environments : env => env }
+  for_each       = local.app_registration_environments
   application_id = azuread_application.github_oidc[each.value].application_id
 }
 
 resource "azuread_application_federated_identity_credential" "github_oidc" {
-  for_each              = var.use_managed_identity ? {} : { for env in var.environments : env => env }
+  for_each              = local.app_registration_environments
   application_object_id = azuread_application.github_oidc[each.value].object_id
   display_name          = "${var.azure_devops_organisation_target}-${var.azure_devops_project_target}-${each.value}"
   description           = "Deployments for ${var.azure_devops_organisation_target}/${var.azure_devops_project_target} for environment ${each.value}"

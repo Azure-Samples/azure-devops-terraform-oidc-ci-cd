@@ -20,7 +20,7 @@ variable "azure_devops_organisation_prefix" {
 
 variable "azure_devops_organisation_target" {
   type    = string
-  default = "https://dev.azure.com/my_organisation"
+  default = "my_organisation"
 }
 
 variable "azure_devops_project_target" {
@@ -43,8 +43,12 @@ variable "environments" {
   default = ["dev", "test", "prod"]
 }
 
-variable "use_managed_identity" {
-  type        = bool
-  default     = true
-  description = "If selected, this option will create and configure a user assigned managed identity in the subscription instead of an AzureAD service principal."
+variable "security_option" {
+  type        = string
+  default     = "self-hosted-agents-with-managed-identity"
+  description = "There are three options `self-hosted-agents-with-managed-identity`, `oidc-with-user-assigned-managed-identity` and `oidc-with-app-registration`."
+  validation {
+    condition     = contains(["self-hosted-agents-with-managed-identity", "oidc-with-user-assigned-managed-identity", "oidc-with-app-registration"], var.security_option)
+    error_message = "The security_option variable must be one of `self-hosted-agents-with-managed-identity`, `oidc-with-user-assigned-managed-identity` or `oidc-with-app-registration`."
+  }
 }

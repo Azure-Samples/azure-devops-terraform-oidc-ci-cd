@@ -1,4 +1,10 @@
+# NOTE: Support for Terraform in Azure DevOps OIDC is still in private preview and not working yet!
+
 trigger: none
+
+variables:
+  - name: workingDirectory
+    value: terraform-example-deploy
 
 stages:
 - stage: validate
@@ -16,10 +22,13 @@ stages:
           terraformVersion: 'latest'
       - pwsh: terraform fmt -check
         displayName: Terraform Format Check
+        workingDirectory: $(workingDirectory)
       - pwsh: terraform init
         displayName: Terraform Init
+        workingDirectory: $(workingDirectory)
       - pwsh: terraform validate
         displayName: Terraform Validate
+        workingDirectory: $(workingDirectory)
       
 - stage: deploy_to_dev
   displayName: Deploy to Dev
@@ -42,23 +51,24 @@ stages:
               displayName: Install Terraform
               inputs:
                 terraformVersion: 'latest'
-            - task: TerraformTaskV4@4
+            - pwsh: |
+                terraform init -backend-config=storage_account_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME) -backend-config=resource_group_name=$(BACKEND_AZURE_RESOURCE_GROUP_NAME)
               displayName: Terraform Init
-              inputs:
-                provider: 'azurerm'
-                command: 'init'
-                backendServiceArm: ${{ variables.SERVICE_CONNECTION_NAME }}
-                backendAzureRmResourceGroupName: ${{ variables.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
-                backendAzureRmStorageAccountName: ${{ variables.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
-                backendAzureRmContainerName: ${{ variables.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }}
-                backendAzureRmKey: terraform.tfstate
-            - task: TerraformTaskV4@4
+              env:
+                ARM_CLIENT_ID: $(AZURE_CLIENT_ID)
+                ARM_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
+                ARM_TENANT_ID: $(AZURE_TENANT_ID)
+                ARM_USE_OIDC: true
+              workingDirectory: $(workingDirectory)
+            - pwsh: |
+                terraform apply --auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"
               displayName: Terraform Apply
-              inputs:
-                provider: 'azurerm'
-                command: 'apply'
-                commandOptions: '-auto-approve -var="resource_group_name=${{ variables.AZURE_RESOURCE_GROUP_NAME }}"'
-                environmentServiceNameAzureRM: ${{ variables.SERVICE_CONNECTION_NAME }}
+              workingDirectory: $(workingDirectory)
+              env:
+                ARM_CLIENT_ID: $(AZURE_CLIENT_ID)
+                ARM_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
+                ARM_TENANT_ID: $(AZURE_TENANT_ID)
+                ARM_USE_OIDC: true
       
 - stage: deploy_to_test
   displayName: Deploy to Test
@@ -87,18 +97,20 @@ stages:
               inputs:
                 provider: 'azurerm'
                 command: 'init'
-                backendServiceArm: ${{ variables.SERVICE_CONNECTION_NAME }}
-                backendAzureRmResourceGroupName: ${{ variables.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
-                backendAzureRmStorageAccountName: ${{ variables.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
-                backendAzureRmContainerName: ${{ variables.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }}
-                backendAzureRmKey: terraform.tfstate
+                workingDirectory: '$(workingDirectory)'
+                backendServiceArm: '${{ variables.serviceConnection }}'
+                backendAzureRmResourceGroupName: '$(BACKEND_AZURE_RESOURCE_GROUP_NAME)'
+                backendAzureRmStorageAccountName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME)'
+                backendAzureRmContainerName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)'
+                backendAzureRmKey: 'terraform.tfstate'
             - task: TerraformTaskV4@4
               displayName: Terraform Apply
               inputs:
                 provider: 'azurerm'
                 command: 'apply'
-                commandOptions: '-auto-approve -var="resource_group_name=${{ variables.AZURE_RESOURCE_GROUP_NAME }}"'
-                environmentServiceNameAzureRM: ${{ variables.SERVICE_CONNECTION_NAME }}
+                workingDirectory: '$(workingDirectory)'
+                commandOptions: '-auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"'
+                environmentServiceNameAzureRM: '${{ variables.serviceConnection }}'
 
 - stage: deploy_to_prod
   displayName: Deploy to Prod
@@ -127,15 +139,17 @@ stages:
               inputs:
                 provider: 'azurerm'
                 command: 'init'
-                backendServiceArm: ${{ variables.SERVICE_CONNECTION_NAME }}
-                backendAzureRmResourceGroupName: ${{ variables.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
-                backendAzureRmStorageAccountName: ${{ variables.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
-                backendAzureRmContainerName: ${{ variables.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }}
-                backendAzureRmKey: terraform.tfstate
+                workingDirectory: '$(workingDirectory)'
+                backendServiceArm: '${{ variables.serviceConnection }}'
+                backendAzureRmResourceGroupName: '$(BACKEND_AZURE_RESOURCE_GROUP_NAME)'
+                backendAzureRmStorageAccountName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME)'
+                backendAzureRmContainerName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)'
+                backendAzureRmKey: 'terraform.tfstate'
             - task: TerraformTaskV4@4
               displayName: Terraform Apply
               inputs:
                 provider: 'azurerm'
                 command: 'apply'
-                commandOptions: '-auto-approve -var="resource_group_name=${{ variables.AZURE_RESOURCE_GROUP_NAME }}"'
-                environmentServiceNameAzureRM: ${{ variables.SERVICE_CONNECTION_NAME }}
+                workingDirectory: '$(workingDirectory)'
+                commandOptions: '-auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"'
+                environmentServiceNameAzureRM: '${{ variables.serviceConnection }}'
