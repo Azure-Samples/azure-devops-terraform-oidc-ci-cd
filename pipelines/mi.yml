@@ -37,7 +37,7 @@ stages:
     - deployment: deploy
       displayName: Deploy with Terraform
       pool: 
-        vmImage: ubuntu-latest 
+        name: agent-pool-dev 
       environment: dev
       strategy:
         runOnce:
@@ -74,7 +74,7 @@ stages:
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   dependsOn: deploy_to_dev
   pool: 
-        vmImage: ubuntu-latest 
+    name: agent-pool-test 
   jobs:
     - deployment: deploy
       displayName: Deploy with Terraform
@@ -121,7 +121,7 @@ stages:
     - deployment: deploy
       displayName: Deploy with Terraform
       pool: 
-        vmImage: ubuntu-latest 
+        name: agent-pool-prod 
       environment: prod
       strategy:
         runOnce:
