@@ -33,6 +33,8 @@ stages:
   condition: ne(variables['Build.Reason'], 'PullRequest')
   variables:
     - group: dev
+    - name: serviceConnection
+      value: service_connection_mi_dev
   jobs:
     - deployment: deploy
       displayName: Deploy with Terraform
@@ -49,7 +51,7 @@ stages:
               displayName: Install Terraform
               inputs:
                 terraformVersion: 'latest'
-             - task: TerraformTaskV4@4
+            - task: TerraformTaskV4@4
               displayName: Terraform Init
               inputs:
                 provider: 'azurerm'
@@ -75,6 +77,10 @@ stages:
   dependsOn: deploy_to_dev
   pool: 
     name: agent-pool-test 
+  variables:
+    - group: test
+    - name: serviceConnection
+      value: service_connection_mi_test
   jobs:
     - deployment: deploy
       displayName: Deploy with Terraform
@@ -117,6 +123,8 @@ stages:
   dependsOn: deploy_to_test
   variables:
     - group: prod
+    - name: serviceConnection
+      value: service_connection_mi_prod
   jobs:
     - deployment: deploy
       displayName: Deploy with Terraform

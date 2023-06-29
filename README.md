@@ -138,7 +138,21 @@ Unfortunately the creation of Managed Identity and OIDC Service Connections is n
    1. Enter your Tenant ID into the `Tenant ID` field.
    1. Click `Verify and save`.
 
-#### Option 2: Self-hosted Agent
+#### Option 2: Self-hosted Agent with Managed Identity
+
+1. Login and navigate to your project in Azure DevOps.
+1. Click `Project settings` on the bottom left.
+1. Click `Service connections`.
+1. Repeat the following steps for `dev`, `test` and `prod`.
+   1. Click `Create service connection`.
+   1. Select `Azure Resource Manager`.
+   1. Select `Managed Identity`.
+   1. Enter your Azure Subscription ID into the `Subscription Id` field.
+   1. Enter the name of your subscription into the `Subscription Name` field.
+   1. Enter your Tenant ID into the `Tenant ID` field.
+   1. Enter `service_connection_mi_<environment>`, where `<environemnt>` is replaced with `dev`, `test` or `prod` as apporpriate in the `Service connection name` field.
+   1. Check the `Grant access to all pipelines` box.
+   1. Click `Save`.
 
 ### Check what has been created
 
