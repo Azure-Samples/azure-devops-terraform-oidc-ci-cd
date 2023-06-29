@@ -1,8 +1,8 @@
 locals {
   agent_pools = local.security_option.self_hosted_agents_with_managed_identity ? {
-    dev  = "${var.prefix}-dev"
-    test = "${var.prefix}-test"
-    prod = "${var.prefix}-prod"
+    dev  = "agent-pool-dev"
+    test = "agent-pool-test"
+    prod = "agent-pool-prod"
   } : {}
   agents = local.security_option.self_hosted_agents_with_managed_identity ? {
     dev01 = {
