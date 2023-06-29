@@ -24,6 +24,7 @@ resource "azuredevops_environment" "example" {
 
 resource "azuredevops_build_definition" "oidc" {
   count      = local.security_option.oidc_with_app_registration || local.security_option.oidc_with_user_assigned_managed_identity ? 1 : 0
+  depends_on = [azuredevops_environment.example]
   project_id = data.azuredevops_project.example.id
   name       = "Run Terraform with OpenID Connect"
 
