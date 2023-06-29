@@ -119,7 +119,7 @@ use_managed_identity = false
 
 Unfortunately the creation of Managed Identity and OIDC Service Connections is not yet supported by the Azure DevOps Terraform provider, so we need to create these manually (or you could use a script to call the API).
 
-#### Options 1: OIDC
+#### Option 1: OIDC
 
 1. Login and navigate to your project in Azure DevOps.
 1. Click `Project settings` on the bottom left.

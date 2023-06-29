@@ -62,6 +62,7 @@ resource "azuredevops_pipeline_authorization" "this" {
   project_id  = data.azuredevops_project.example.id
   resource_id = azuredevops_agent_queue.this[each.key].id
   type        = "queue"
+  pipeline_id = azuredevops_build_definition.mi[0].id
 }
 
 resource "azurerm_container_group" "example" {
@@ -69,7 +70,7 @@ resource "azurerm_container_group" "example" {
   name                = each.value.name
   location            = var.location
   resource_group_name = azurerm_resource_group.agents.name
-  ip_address_type     = "Private"
+  ip_address_type     = "None"
   os_type             = "Linux"
 
   identity {
