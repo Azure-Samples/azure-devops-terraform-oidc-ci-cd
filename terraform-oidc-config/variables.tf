@@ -13,9 +13,14 @@ variable "azure_devops_token" {
   sensitive = true
 }
 
+variable "azure_devops_organisation_prefix" {
+  type    = string
+  default = "https://dev.azure.com"
+}
+
 variable "azure_devops_organisation_target" {
   type    = string
-  default = "my_organisation"
+  default = "https://dev.azure.com/my_organisation"
 }
 
 variable "azure_devops_project_target" {
@@ -39,7 +44,7 @@ variable "environments" {
 }
 
 variable "use_managed_identity" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
   description = "If selected, this option will create and configure a user assigned managed identity in the subscription instead of an AzureAD service principal."
 }

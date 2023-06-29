@@ -18,9 +18,9 @@ resource "azuredevops_git_repository" "example" {
 }
 
 resource "azuredevops_environment" "example" {
-  for_each    = { for env in var.environments : env => env }
-  name = each.value
-  project_id  = data.azuredevops_project.example.id
+  for_each   = { for env in var.environments : env => env }
+  name       = each.value
+  project_id = data.azuredevops_project.example.id
 }
 
 resource "azuredevops_build_definition" "example" {
@@ -39,48 +39,66 @@ resource "azuredevops_build_definition" "example" {
   }
 }
 
+resource "azuredevops_pipeline_authorization" "example" {
+  for_each   = { for env in var.environments : env => env }
+  project_id  = data.azuredevops_project.example.id
+  resource_id = azuredevops_environment.example[each.value].id
+  type        = "environment"
+  pipeline_id = azuredevops_build_definition.example.id
+}
+
+resource "azuredevops_branch_policy_build_validation" "example" {
+  project_id = data.azuredevops_project.example.id
+
+  enabled  = true
+  blocking = true
+
+  settings {
+    display_name        = "Terraform validation policy"
+    build_definition_id = azuredevops_build_definition.example.id
+    valid_duration      = 720
+
+    scope {
+      repository_id  = azuredevops_git_repository.example.id
+      repository_ref = azuredevops_git_repository.example.default_branch
+      match_type     = "Exact"
+    }
+
+    scope {
+      match_type     = "DefaultBranch"
+    }
+  }
+}
+
 resource "azuredevops_variable_group" "example" {
   for_each     = { for env in var.environments : env => env }
-  project_id   = azuredevops_project.example.id
+  project_id   = data.azuredevops_project.example.id
   name         = each.value
   description  = "Example Variable Group for ${each.value}"
   allow_access = true
 
   variable {
-    name  = "AZURE_CLIENT_ID"
-    value = var.use_managed_identity ? azurerm_user_assigned_identity.example[each.value].client_id : azuread_application.github_oidc[each.value].application_id
-    is_secret = true
-  }
-
-  variable {
-    name         = "AZURE_SUBSCRIPTION_ID"
-    secret_value = data.azurerm_client_config.current.subscription_id
-    is_secret    = true
-  }
-
-  variable {
-    name         = "AZURE_TENANT_ID"
-    secret_value = data.azurerm_client_config.current.tenant_id
-    is_secret    = true
-  }
-
-  variable {
     name         = "AZURE_RESOURCE_GROUP_NAME"
-    secret_value = azurerm_resource_group.example[each.value].name
+    value = azurerm_resource_group.example[each.value].name
   }
 
   variable {
     name         = "BACKEND_AZURE_RESOURCE_GROUP_NAME"
-    secret_value = azurerm_resource_group.state.name
+    value = azurerm_resource_group.state.name
   }
 
   variable {
     name         = "BACKEND_AZURE_STORAGE_ACCOUNT_NAME"
-    secret_value = azurerm_storage_account.example.name
+    value = azurerm_storage_account.example.name
   }
 
   variable {
     name         = "BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME"
-    secret_value = azurerm_storage_container.example[each.value].name
+    value = azurerm_storage_container.example[each.value].name
+  }
+
+  variable {
+    name         = "SERVICE_CONNECTION_NAME"
+    value = "service_connection_${each.value}"
   }
 }

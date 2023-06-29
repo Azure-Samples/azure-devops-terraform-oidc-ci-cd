@@ -62,18 +62,19 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 
 ## Demo / Lab
 
-### Generate a PAT (Personal Access Token) in GitHub
+### Generate a PAT (Personal Access Token) in Azure DevOps
 
-1. Navigate to [github.com](https://github.com).
-1. Login and select the account icon in the top right and then `Settings`.
-1. Click `Developer settings`.
-1. Click `Personal access tokens` and select `Tokens (classic)`.
-1. Click `Generate new token` and select the `classic` option.
-1. Type `Demo_OIDC` into the `Note` field.
+1. Navigate to [dev.azure.com](https://dev.azure.com).
+1. Login and select the `User Settings` icon in the top right and then `Personal access tokens`.
+1. Click `New token`.
+1. Type `Demo_OIDC` into the `Name` field.
+1. Click `Show all scopes` down at the bottom of the dialog.
 1. Check these scopes:
-   1. `repo`
-   1. `delete_repo`
-1. Click `Generate token`
+   1. `Code`: `Full`
+   1. `Build`: `Read & execute`
+   1. `Environment`: `Read & manage`
+   1. `Variable Groups`: `Read, create & manage`
+1. Click `Create`
 1. > IMPORTANT: Copy the token and save it somewhere.
 
 ### Clone the repo and setup your variables
@@ -84,12 +85,14 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 1. In the config file add the following:
 ``` 
 prefix = "<your_initials>-<date_as_YYYYMMDD>"
-github_organisation_target = "<your_github_organisation_name>"
+github_organisation_target = "<your_azure_devops_organisation_name>"
+github_project_name = "<your_azure_devops_project_name>"
 ```
 e.g.
 ```
 prefix = "JFH-20221208"
-github_organisation_target = "my-organization"
+azure_devops_organisation_target = "my-organization"
+github_project_name = "my-project"
 ```
 
 > NOTE if you wish to use the Azure Active Directory Service Principal approach rather than a User Assigned Managed Identity, then also add this setting to `terraform.tfvars`:
@@ -102,13 +105,40 @@ use_managed_identity = false
 
 1. Open the Visual Studio Code Terminal and navigate the `terraform-oidc-config` folder.
 1. Run `az login` and follow the prompts to login to Azure with your Global Administrator account.
+1. Run `az account show`. If you are not connected to you test subscription, change it by running `az account set --subscription "<subscription-id>"`
 1. Run `terraform apply`.
-1. You'll be prompted for the variable `var.github_token`. Paste in the PAT you generated earlier and hit enter.
+1. You'll be prompted for the variable `var.azure_devops_token`. Paste in the PAT you generated earlier and hit enter.
 1. The plan will complete. Review the plan and see what is going to be created.
 1. Type `yes` and hit enter once you have reviewed the plan.
 1. Wait for the apply to complete.
+1. You will see three outputs from this run. These are the Service Principal Ids that you will require in the next step. Save them somewhere.
 
 > NOTE: If you are a Microsoft employee you may get a 403 error here. If so, you need to grant your PAT SSO access to the Azure-Samples organisation. This does not affect non-Microsoft users.
+
+### Manual Configuration Steps
+
+Unfortunately the creation of Managed Identity and OIDC Service Connections is not yet supported by the Azure DevOps Terraform provider, so we need to create these manually (or you could use a script to call the API).
+
+#### Options 1: OIDC
+
+1. Login and navigate to your project in Azure DevOps.
+1. Click `Project settings` on the bottom left.
+1. Click `Service connections`.
+1. Repeat the following steps for `dev`, `test` and `prod`.
+   1. Click `Create service connection`.
+   1. Select `Azure Resource Manager`.
+   1. Select `Workload Identity federation (manual)`.
+   1. Enter `service_connection_<environment>`, where `<environemnt>` is replaced with `dev`, `test` or `prod` as apporpriate.
+   1. Check the `Grant access to all pipelines` box.
+   1. Click `Next`.
+   1. Take note of the `Issuer` and `Subject identifier` at the top, you'll recognise these from the Terraform code.
+   1. Enter your Azure Subscription ID into the `Subscription Id` field.
+   1. Enter the name of your subscription into the `Subscription Name` field.
+   1. Copy and paste the relevant Service Principal ID for `dev`, `test` or `prod` into the `Service Principal Id` field.
+   1. Enter your Tenant ID into the `Tenant ID` field.
+   1. Click `Verify and save`.
+
+#### Option 2: Self-hosted Agent
 
 ### Check what has been created
 
