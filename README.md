@@ -8,7 +8,7 @@ name: Using Azure DevOps Pipelines Managed Identity or OpenID Connect (OIDC) wit
 description: A sample showing how to configure Azure DevOps Managed Identity or OpenID Connect (OIDC) connection to Azure with Terraform and then use that configuration to deploy resources with Terraform.
 products:
 - azure
-- github
+- azure-devops
 urlFragment: azure-devops-terraform-oidc-ci-cd
 ---
 
@@ -20,8 +20,8 @@ This is a two part sample. The first part demonstrates how to configure Azure an
 
 | File/folder | Description |
 |-------------|-------------|
-| `terraform-example-deploy`       | Some Terraform with Azure Resources for the demo to deploy. |
-| `terraform-oidc-config` | The Terraform to configure Azure and GitHub ready for OIDC authenticaton. |
+| `terraform-example-deploy` | Some Terraform with Azure Resources for the demo to deploy. |
+| `terraform-oidc-config` | The Terraform to configure Azure and Azure DevOps ready for Managed Identity or OIDC authenticaton. |
 | `.gitignore` | Define what to ignore at commit time. |
 | `CHANGELOG.md` | List of changes to the sample. |
 | `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
@@ -33,8 +33,8 @@ This is a two part sample. The first part demonstrates how to configure Azure an
 This sample includes the following features:
 
 * Option 1: Setup 3 Azure User Assigned Managed Identities with Self-hosted Azure DevOps agents in Azure Container Instances.
-* (NOT AVAILABLE YET) Option 2: Setup 3 Azure User Assigned Managed Identities with Federation ready for GitHub OIDC.
-* (NOT AVAILABLE YET) Option 3: Setup 3 Azure App Registrations (Service Principals) with Federation ready for GitHub OIDC.
+* (NOT AVAILABLE YET) Option 2: Setup 3 Azure User Assigned Managed Identities with Federation ready for Azure DevOps OIDC.
+* (NOT AVAILABLE YET) Option 3: Setup 3 Azure App Registrations (Service Principals) with Federation ready for Azure DevOps OIDC.
 * Setup an Azure Storage Account for State file management.
 * Setup Azure DevOps repository and environments ready to deploy Terraform with OIDC.
 * Run a Continuous Delivery pipeline for Terraform using OIDC auth for state and deploying resources to Azure.
