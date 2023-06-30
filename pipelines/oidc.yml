@@ -1,6 +1,7 @@
 # NOTE: Support for Terraform in Azure DevOps OIDC is still in private preview. You'll need to get access to the preview to use this pipeline.
 
-trigger: none
+trigger: 
+- main
 
 variables:
   - name: workingDirectory
