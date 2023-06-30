@@ -9,7 +9,7 @@ variable "location" {
 }
 
 variable "azure_devops_token" {
-  type      = string
+  type = string
   #sensitive = true
 }
 

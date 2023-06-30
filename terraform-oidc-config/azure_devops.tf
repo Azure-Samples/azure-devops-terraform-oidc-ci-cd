@@ -1,8 +1,8 @@
 locals {
-  is_oidc = local.security_option.oidc_with_user_assigned_managed_identity || local.security_option.oidc_with_app_registration
-  is_mi = local.security_option.self_hosted_agents_with_managed_identity
+  is_oidc           = local.security_option.oidc_with_user_assigned_managed_identity || local.security_option.oidc_with_app_registration
+  is_mi             = local.security_option.self_hosted_agents_with_managed_identity
   oidc_environments = local.is_oidc ? { for env in var.environments : env => env } : {}
-  mi_environments = local.is_mi ? { for env in var.environments : env => env } : {}
+  mi_environments   = local.is_mi ? { for env in var.environments : env => env } : {}
 }
 
 resource "random_pet" "example" {
@@ -157,8 +157,8 @@ resource "azuredevops_variable_group" "example" {
 }
 
 resource "terraform_data" "service_connection_oidc" {
-  for_each     = local.oidc_environments
-  triggers_replace = [ azurerm_user_assigned_identity.example[each.value].id ]
+  for_each         = local.oidc_environments
+  triggers_replace = [azurerm_user_assigned_identity.example[each.value].id]
   input = {
     service_connection_name = "service_connection_${each.value}"
     client_id               = local.security_option.oidc_with_app_registration ? azuread_application.github_oidc[each.value].application_id : azurerm_user_assigned_identity.example[each.value].client_id
@@ -184,8 +184,8 @@ resource "terraform_data" "service_connection_oidc" {
 }
 
 resource "terraform_data" "service_connection_managed_identity" {
-  for_each     = local.mi_environments
-  triggers_replace = [ azurerm_user_assigned_identity.example[each.value].id ]
+  for_each         = local.mi_environments
+  triggers_replace = [azurerm_user_assigned_identity.example[each.value].id]
   input = {
     service_connection_name = "service_connection_mi_${each.value}"
     tenant_id               = data.azurerm_client_config.current.tenant_id
@@ -230,7 +230,7 @@ data "azuredevops_serviceendpoint_azurerm" "mi" {
 resource "azuredevops_pipeline_authorization" "oidc_endpoint" {
   for_each    = local.oidc_environments
   project_id  = data.azuredevops_project.example.id
-  resource_id = data.azuredevops_serviceendpoint_azurerm.oidc[each.value].service_endpoint_id 
+  resource_id = data.azuredevops_serviceendpoint_azurerm.oidc[each.value].service_endpoint_id
   type        = "endpoint"
   pipeline_id = azuredevops_build_definition.oidc[0].id
 }
