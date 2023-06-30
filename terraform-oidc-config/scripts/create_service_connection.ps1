@@ -37,7 +37,7 @@ if ($serviceEndpoints.count -gt 0) {
     $serviceConnectionId = $serviceEndpoints.value[0].id
 }
 
-if($serviceConnectionExists -and $action -eq "Destroy") {
+if($serviceConnectionExists) {
     Write-Host "Deleting service connection '${serviceConnectionName}'."
     $apiUri = "${organizationUrl}/_apis/serviceendpoint/endpoints/${serviceConnectionId}?projectIds=${projectId}&api-version=${apiVersion}"
 
@@ -50,7 +50,7 @@ if($serviceConnectionExists -and $action -eq "Destroy") {
                     | Set-Variable serviceEndpoint
 }
 
-if ($serviceConnectionExists -or $action -eq "Destroy") {
+if ($action -eq "Destroy") {
     return
 }
 
