@@ -33,8 +33,8 @@ This is a two part sample. The first part demonstrates how to configure Azure an
 This sample includes the following features:
 
 * Option 1: Setup 3 Azure User Assigned Managed Identities with Self-hosted Azure DevOps agents in Azure Container Instances.
-* (NOT AVAILABLE YET) Option 2: Setup 3 Azure User Assigned Managed Identities with Federation ready for Azure DevOps OIDC.
-* (NOT AVAILABLE YET) Option 3: Setup 3 Azure App Registrations (Service Principals) with Federation ready for Azure DevOps OIDC.
+* Option 2: Setup 3 Azure User Assigned Managed Identities with Federation ready for Azure DevOps OIDC.
+* Option 3: Setup 3 Azure App Registrations (Service Principals) with Federation ready for Azure DevOps OIDC.
 * Setup an Azure Storage Account for State file management.
 * Setup Azure DevOps repository and environments ready to deploy Terraform with OIDC.
 * Run a Continuous Delivery pipeline for Terraform using OIDC auth for state and deploying resources to Azure.
@@ -42,9 +42,23 @@ This sample includes the following features:
 
 ### Self Hosted Agent with Managed Identity, OIDC Service Principal or OIDC Managed Identity
 
-There are three approaches shown in the code for credential free deployment of Azure resources from Azure DevOps. The preferred method is to use OIDC with a User Assigned Managed Identity since this does not require elevated permissions in Azure Active Directory and has a longer token timeout than an App Registration. However the code also shows the Service Principal approach for those that prefer that method. If you choose the Service Principal approach then the account creating the infrastructure will need permission to create Applications in Azure Active Directory. 
+There are three approaches shown in the code for credential free deployment of Azure resources from Azure DevOps.
 
-The default option is Self Hosted Agents with Managed Identities, as this is currently the only supported option. This sample will be updated as soon as options 2 and 3 become available.
+The preferred method is to use OIDC with a User Assigned Managed Identity since this does not require elevated permissions in Azure Active Directory and has a longer token timeout than an App Registration. However the code also shows the Service Principal approach for those that prefer that method. If you choose the Service Principal approach then the account creating the infrastructure will need permission to create Applications in Azure Active Directory. 
+
+The default option is Self Hosted Agents with Managed Identities since OIDC is still in private preview.
+
+#### Option 1: `self-hosted-agents-with-managed-identity`
+
+This option will create self hosted agents and service connections for the managed identities associated with those agents.
+
+#### Option 2: `oidc-with-user-assigned-managed-identity`
+
+This option will create managed identities configured for federation and service connections for them.
+
+#### Option 3: `oidc-with-app-registration`
+
+This option will create app registrations configured for federation and service connections for them.
 
 ## Getting Started
 
