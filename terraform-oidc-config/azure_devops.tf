@@ -6,7 +6,14 @@ data "azuredevops_project" "example" {
   name = var.azure_devops_project_target
 }
 
+resource "azuredevops_environment" "example" {
+  for_each   = { for env in var.environments : env => env }
+  name       = each.value
+  project_id = data.azuredevops_project.example.id
+}
+
 resource "azuredevops_git_repository" "example" {
+  depends_on = [azuredevops_environment.example]
   project_id = data.azuredevops_project.example.id
   name       = "${var.prefix}-${random_pet.example.id}"
   initialization {
@@ -16,15 +23,8 @@ resource "azuredevops_git_repository" "example" {
   }
 }
 
-resource "azuredevops_environment" "example" {
-  for_each   = { for env in var.environments : env => env }
-  name       = each.value
-  project_id = data.azuredevops_project.example.id
-}
-
 resource "azuredevops_build_definition" "oidc" {
   count      = local.security_option.oidc_with_app_registration || local.security_option.oidc_with_user_assigned_managed_identity ? 1 : 0
-  depends_on = [azuredevops_environment.example]
   project_id = data.azuredevops_project.example.id
   name       = "Run Terraform with OpenID Connect"
 
