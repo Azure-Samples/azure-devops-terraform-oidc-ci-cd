@@ -13,6 +13,8 @@ param (
     [string]$apiVersion = "7.1-preview.4"
 )
 
+Write-Host "Action: ${action}"
+
 # Setup Authorization Header
 $base64PatToken = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("`:$accessToken"))
 
@@ -31,7 +33,6 @@ Invoke-RestMethod -Uri $apiUri `
 
 if ($serviceEndpoints.count -gt 0) {
     Write-Host "Service connection '${serviceConnectionName}' already exists."
-    $serviceEndpoints.value[0] | ConvertTo-Json -Depth 4 | Write-Host
     $serviceConnectionExists = $true
     $serviceConnectionId = $serviceEndpoints.value[0].id
 }

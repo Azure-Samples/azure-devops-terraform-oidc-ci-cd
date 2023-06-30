@@ -21,7 +21,7 @@ resource "terraform_data" "service_connection_oidc" {
   provisioner "local-exec" {
     when        = destroy
     interpreter = ["pwsh", "-Command"]
-    command     = "./scripts/create_service_connection.ps1 -action=\"Destroy\" -serviceConnectionName \"${self.input.service_connection_name}\" -clientId \"${self.input.client_id}\" -tenantId \"${self.input.tenant_id}\" -subscriptionId \"${self.input.subscription_id}\" -subscriptionName \"${self.input.subscription_name}\" -projectId \"${self.input.project_id}\" -projectName \"${self.input.project_name}\" -accessToken \"${self.input.access_token}\" -organizationUrl \"${self.input.organization_url}\" "
+    command     = "./scripts/create_service_connection.ps1 -action \"Destroy\" -serviceConnectionName \"${self.input.service_connection_name}\" -clientId \"${self.input.client_id}\" -tenantId \"${self.input.tenant_id}\" -subscriptionId \"${self.input.subscription_id}\" -subscriptionName \"${self.input.subscription_name}\" -projectId \"${self.input.project_id}\" -projectName \"${self.input.project_name}\" -accessToken \"${self.input.access_token}\" -organizationUrl \"${self.input.organization_url}\" "
   }
 }
 
@@ -47,7 +47,7 @@ resource "terraform_data" "service_connection_managed_identity" {
   provisioner "local-exec" {
     when        = destroy
     interpreter = ["pwsh", "-Command"]
-    command     = "./scripts/create_service_connection.ps1 -action=\"Destroy\" -serviceConnectionType \"ManagedIdentity\" -serviceConnectionName \"${self.input.service_connection_name}\" -tenantId \"${self.input.tenant_id}\" -subscriptionId \"${self.input.subscription_id}\" -subscriptionName \"${self.input.subscription_name}\" -projectId \"${self.input.project_id}\" -projectName \"${self.input.project_name}\" -accessToken \"${self.input.access_token}\" -organizationUrl \"${self.input.organization_url}\" "
+    command     = "./scripts/create_service_connection.ps1 -action \"Destroy\" -serviceConnectionType \"ManagedIdentity\" -serviceConnectionName \"${self.input.service_connection_name}\" -tenantId \"${self.input.tenant_id}\" -subscriptionId \"${self.input.subscription_id}\" -subscriptionName \"${self.input.subscription_name}\" -projectId \"${self.input.project_id}\" -projectName \"${self.input.project_name}\" -accessToken \"${self.input.access_token}\" -organizationUrl \"${self.input.organization_url}\" "
   }
 }
 
