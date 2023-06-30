@@ -1,3 +1,10 @@
+locals {
+  is_oidc = local.security_option.oidc_with_user_assigned_managed_identity || local.security_option.oidc_with_app_registration
+  is_mi = local.security_option.self_hosted_agents_with_managed_identity
+  oidc_environments = local.is_oidc ? { for env in var.environments : env => env } : {}
+  mi_environments = local.is_mi ? { for env in var.environments : env => env } : {}
+}
+
 resource "random_pet" "example" {
 
 }
@@ -24,7 +31,7 @@ resource "azuredevops_git_repository" "example" {
 }
 
 resource "azuredevops_build_definition" "oidc" {
-  count      = local.security_option.oidc_with_app_registration || local.security_option.oidc_with_user_assigned_managed_identity ? 1 : 0
+  count      = local.is_oidc ? 1 : 0
   project_id = data.azuredevops_project.example.id
   name       = "Run Terraform with OpenID Connect"
 
@@ -41,7 +48,7 @@ resource "azuredevops_build_definition" "oidc" {
 }
 
 resource "azuredevops_build_definition" "mi" {
-  count      = local.security_option.self_hosted_agents_with_managed_identity ? 1 : 0
+  count      = local.is_mi ? 1 : 0
   project_id = data.azuredevops_project.example.id
   name       = "Run Terraform with Managed Identity"
 
@@ -58,7 +65,7 @@ resource "azuredevops_build_definition" "mi" {
 }
 
 resource "azuredevops_pipeline_authorization" "oidc" {
-  for_each    = local.security_option.oidc_with_app_registration || local.security_option.oidc_with_user_assigned_managed_identity ? { for env in var.environments : env => env } : {}
+  for_each    = local.oidc_environments
   project_id  = data.azuredevops_project.example.id
   resource_id = azuredevops_environment.example[each.value].id
   type        = "environment"
@@ -66,7 +73,7 @@ resource "azuredevops_pipeline_authorization" "oidc" {
 }
 
 resource "azuredevops_pipeline_authorization" "mi" {
-  for_each    = local.security_option.self_hosted_agents_with_managed_identity ? { for env in var.environments : env => env } : {}
+  for_each    = local.mi_environments
   project_id  = data.azuredevops_project.example.id
   resource_id = azuredevops_environment.example[each.value].id
   type        = "environment"
@@ -74,7 +81,7 @@ resource "azuredevops_pipeline_authorization" "mi" {
 }
 
 resource "azuredevops_branch_policy_build_validation" "oidc" {
-  count      = local.security_option.oidc_with_app_registration || local.security_option.oidc_with_user_assigned_managed_identity ? 1 : 0
+  count      = local.is_oidc ? 1 : 0
   project_id = data.azuredevops_project.example.id
 
   enabled  = true
@@ -98,7 +105,7 @@ resource "azuredevops_branch_policy_build_validation" "oidc" {
 }
 
 resource "azuredevops_branch_policy_build_validation" "mi" {
-  count      = local.security_option.self_hosted_agents_with_managed_identity ? 1 : 0
+  count      = local.is_mi ? 1 : 0
   project_id = data.azuredevops_project.example.id
 
   enabled  = true
@@ -150,7 +157,7 @@ resource "azuredevops_variable_group" "example" {
 }
 
 resource "terraform_data" "service_connection_oidc" {
-  for_each     = local.security_option.oidc_with_user_assigned_managed_identity || local.security_option.oidc_with_app_registration ? { for env in var.environments : env => env } : {}
+  for_each     = local.oidc_environments
   triggers_replace = [ azurerm_user_assigned_identity.example[each.value].id ]
   input = {
     service_connection_name = "service_connection_${each.value}"
@@ -177,7 +184,7 @@ resource "terraform_data" "service_connection_oidc" {
 }
 
 resource "terraform_data" "service_connection_managed_identity" {
-  for_each     = local.security_option.self_hosted_agents_with_managed_identity ? { for env in var.environments : env => env } : {}
+  for_each     = local.mi_environments
   triggers_replace = [ azurerm_user_assigned_identity.example[each.value].id ]
   input = {
     service_connection_name = "service_connection_mi_${each.value}"
@@ -203,7 +210,7 @@ resource "terraform_data" "service_connection_managed_identity" {
 }
 
 data "azuredevops_serviceendpoint_azurerm" "oidc" {
-  for_each = local.security_option.oidc_with_user_assigned_managed_identity || local.security_option.oidc_with_app_registration ? { for env in var.environments : env => env } : {}
+  for_each = local.oidc_environments
   depends_on = [
     terraform_data.service_connection_oidc
   ]
@@ -212,7 +219,7 @@ data "azuredevops_serviceendpoint_azurerm" "oidc" {
 }
 
 data "azuredevops_serviceendpoint_azurerm" "mi" {
-  for_each = local.security_option.self_hosted_agents_with_managed_identity ? { for env in var.environments : env => env } : {}
+  for_each = local.mi_environments
   depends_on = [
     terraform_data.service_connection_managed_identity
   ]
@@ -221,7 +228,7 @@ data "azuredevops_serviceendpoint_azurerm" "mi" {
 }
 
 resource "azuredevops_pipeline_authorization" "oidc_endpoint" {
-  for_each    = local.security_option.oidc_with_app_registration || local.security_option.oidc_with_user_assigned_managed_identity ? { for env in var.environments : env => env } : {}
+  for_each    = local.oidc_environments
   project_id  = data.azuredevops_project.example.id
   resource_id = data.azuredevops_serviceendpoint_azurerm.oidc[each.value].service_endpoint_id 
   type        = "endpoint"
@@ -229,7 +236,7 @@ resource "azuredevops_pipeline_authorization" "oidc_endpoint" {
 }
 
 resource "azuredevops_pipeline_authorization" "mi_endpoint" {
-  for_each    = local.security_option.self_hosted_agents_with_managed_identity ? { for env in var.environments : env => env } : {}
+  for_each    = local.mi_environments
   project_id  = data.azuredevops_project.example.id
   resource_id = data.azuredevops_serviceendpoint_azurerm.mi[each.value].service_endpoint_id
   type        = "endpoint"
