@@ -76,7 +76,8 @@ The instructions for this sample are in the form of a Lab. Follow along with the
    1. `Code`: `Full`
    1. `Build`: `Read & execute`
    1. `Environment`: `Read & manage`
-   1. `Variable Groups`: `Read, create & manage`
+   1. `Service Connections`: `Read, query, & manage`
+   1. `Variable Groups`: `Read, create, & manage`
 1. Click `Create`
 1. > IMPORTANT: Copy the token and save it somewhere.
 
@@ -119,45 +120,6 @@ security_option = "oidc-with-app-registration"
 1. You will see three outputs from this run. These are the Service Principal Ids that you will require in the next step. Save them somewhere.
 
 > NOTE: If you are a Microsoft employee you may get a 403 error here. If so, you need to grant your PAT SSO access to the Azure-Samples organisation. This does not affect non-Microsoft users.
-
-### Manual Configuration Steps
-
-Unfortunately the creation of Managed Identity and OIDC Service Connections is not yet supported by the Azure DevOps Terraform provider, so we need to create these manually (or you could use a script to call the API).
-
-#### Option 1: Self-hosted Agent with Managed Identity
-
-1. Login and navigate to your project in Azure DevOps.
-1. Click `Project settings` on the bottom left.
-1. Click `Service connections`.
-1. Repeat the following steps for `dev`, `test` and `prod`.
-   1. Click `Create service connection`.
-   1. Select `Azure Resource Manager`.
-   1. Select `Managed Identity`.
-   1. Enter your Azure Subscription ID into the `Subscription Id` field.
-   1. Enter the name of your subscription into the `Subscription Name` field.
-   1. Enter your Tenant ID into the `Tenant ID` field.
-   1. Enter `service_connection_mi_<environment>`, where `<environemnt>` is replaced with `dev`, `test` or `prod` as apporpriate in the `Service connection name` field.
-   1. Check the `Grant access to all pipelines` box.
-   1. Click `Save`.
-
-#### Options 2 or 3: OIDC
-
-1. Login and navigate to your project in Azure DevOps.
-1. Click `Project settings` on the bottom left.
-1. Click `Service connections`.
-1. Repeat the following steps for `dev`, `test` and `prod`.
-   1. Click `Create service connection`.
-   1. Select `Azure Resource Manager`.
-   1. Select `Workload Identity federation (manual)`.
-   1. Enter `service_connection_<environment>`, where `<environemnt>` is replaced with `dev`, `test` or `prod` as apporpriate.
-   1. Check the `Grant access to all pipelines` box.
-   1. Click `Next`.
-   1. Take note of the `Issuer` and `Subject identifier` at the top, you'll recognise these from the Terraform code.
-   1. Enter your Azure Subscription ID into the `Subscription Id` field.
-   1. Enter the name of your subscription into the `Subscription Name` field.
-   1. Copy and paste the relevant Service Principal ID for `dev`, `test` or `prod` into the `Service Principal Id` field.
-   1. Enter your Tenant ID into the `Tenant ID` field.
-   1. Click `Verify and save`.
 
 ### Check what has been created
 

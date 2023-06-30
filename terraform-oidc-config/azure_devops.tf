@@ -129,21 +129,6 @@ resource "azuredevops_variable_group" "example" {
   allow_access = true
 
   variable {
-    name  = "AZURE_CLIENT_ID"
-    value = local.security_option.oidc_with_user_assigned_managed_identity || local.security_option.self_hosted_agents_with_managed_identity ? azurerm_user_assigned_identity.example[each.value].client_id : azuread_application.github_oidc[each.value].application_id
-  }
-
-  variable {
-    name  = "AZURE_SUBSCRIPTION_ID"
-    value = data.azurerm_client_config.current.subscription_id
-  }
-
-  variable {
-    name  = "AZURE_TENANT_ID"
-    value = data.azurerm_client_config.current.tenant_id
-  }
-
-  variable {
     name  = "AZURE_RESOURCE_GROUP_NAME"
     value = azurerm_resource_group.example[each.value].name
   }
@@ -161,5 +146,58 @@ resource "azuredevops_variable_group" "example" {
   variable {
     name  = "BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME"
     value = azurerm_storage_container.example[each.value].name
+  }
+}
+
+resource "terraform_data" "service_connection_oidc" {
+  for_each     = local.security_option.oidc_with_user_assigned_managed_identity || local.security_option.oidc_with_app_registration ? { for env in var.environments : env => env } : {}
+  triggers_replace = [ azurerm_user_assigned_identity.example[each.value].id ]
+  input = {
+    service_connection_name = "service_connection_${each.value}"
+    client_id               = local.security_option.oidc_with_app_registration ? azuread_application.github_oidc[each.value].application_id : azurerm_user_assigned_identity.example[each.value].client_id
+    tenant_id               = data.azurerm_client_config.current.tenant_id
+    subscription_id         = data.azurerm_client_config.current.subscription_id
+    subscription_name       = data.azurerm_subscription.current.display_name
+    project_id              = data.azuredevops_project.example.id
+    project_name            = data.azuredevops_project.example.name
+    access_token            = var.azure_devops_token
+    organization_url        = "${var.azure_devops_organisation_prefix}/${var.azure_devops_organisation_target}"
+  }
+
+  provisioner "local-exec" {
+    interpreter = ["pwsh", "-Command"]
+    command     = "./scripts/create_service_connection.ps1 -serviceConnectionName \"${self.input.service_connection_name}\" -clientId \"${self.input.client_id}\" -tenantId \"${self.input.tenant_id}\" -subscriptionId \"${self.input.subscription_id}\" -subscriptionName \"${self.input.subscription_name}\" -projectId \"${self.input.project_id}\" -projectName \"${self.input.project_name}\" -accessToken \"${self.input.access_token}\" -organizationUrl \"${self.input.organization_url}\" "
+  }
+
+  provisioner "local-exec" {
+    when        = destroy
+    interpreter = ["pwsh", "-Command"]
+    command     = "./scripts/create_service_connection.ps1 -action=\"Destroy\" -serviceConnectionName \"${self.input.service_connection_name}\" -clientId \"${self.input.client_id}\" -tenantId \"${self.input.tenant_id}\" -subscriptionId \"${self.input.subscription_id}\" -subscriptionName \"${self.input.subscription_name}\" -projectId \"${self.input.project_id}\" -projectName \"${self.input.project_name}\" -accessToken \"${self.input.access_token}\" -organizationUrl \"${self.input.organization_url}\" "
+  }
+}
+
+resource "terraform_data" "service_connection_managed_identity" {
+  for_each     =  { for env in var.environments : env => env } 
+  triggers_replace = [ azurerm_user_assigned_identity.example[each.value].id ]
+  input = {
+    service_connection_name = "service_connection_mi_${each.value}"
+    tenant_id               = data.azurerm_client_config.current.tenant_id
+    subscription_id         = data.azurerm_client_config.current.subscription_id
+    subscription_name       = data.azurerm_subscription.current.display_name
+    project_id              = data.azuredevops_project.example.id
+    project_name            = data.azuredevops_project.example.name
+    access_token            = var.azure_devops_token
+    organization_url        = "${var.azure_devops_organisation_prefix}/${var.azure_devops_organisation_target}"
+  }
+
+  provisioner "local-exec" {
+    interpreter = ["pwsh", "-Command"]
+    command     = "./scripts/create_service_connection.ps1 -serviceConnectionType \"ManagedIdentity\" -serviceConnectionName \"${self.input.service_connection_name}\" -tenantId \"${self.input.tenant_id}\" -subscriptionId \"${self.input.subscription_id}\" -subscriptionName \"${self.input.subscription_name}\" -projectId \"${self.input.project_id}\" -projectName \"${self.input.project_name}\" -accessToken \"${self.input.access_token}\" -organizationUrl \"${self.input.organization_url}\" "
+  }
+
+  provisioner "local-exec" {
+    when        = destroy
+    interpreter = ["pwsh", "-Command"]
+    command     = "./scripts/create_service_connection.ps1 -action=\"Destroy\" -serviceConnectionType \"ManagedIdentity\" -serviceConnectionName \"${self.input.service_connection_name}\" -tenantId \"${self.input.tenant_id}\" -subscriptionId \"${self.input.subscription_id}\" -subscriptionName \"${self.input.subscription_name}\" -projectId \"${self.input.project_id}\" -projectName \"${self.input.project_name}\" -accessToken \"${self.input.access_token}\" -organizationUrl \"${self.input.organization_url}\" "
   }
 }

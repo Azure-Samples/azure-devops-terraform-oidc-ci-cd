@@ -10,7 +10,7 @@ variable "location" {
 
 variable "azure_devops_token" {
   type      = string
-  sensitive = true
+  #sensitive = true
 }
 
 variable "azure_devops_organisation_prefix" {
