@@ -177,7 +177,7 @@ resource "terraform_data" "service_connection_oidc" {
 }
 
 resource "terraform_data" "service_connection_managed_identity" {
-  for_each     = local.security_option.self_hosted_agents_with_managed_identity ? { for env in var.environments : env => env } 
+  for_each     = local.security_option.self_hosted_agents_with_managed_identity ? { for env in var.environments : env => env } : {}
   triggers_replace = [ azurerm_user_assigned_identity.example[each.value].id ]
   input = {
     service_connection_name = "service_connection_mi_${each.value}"
@@ -202,18 +202,36 @@ resource "terraform_data" "service_connection_managed_identity" {
   }
 }
 
-resource "azuredevops_pipeline_authorization" "oidc" {
+data "azuredevops_serviceendpoint_azurerm" "oidc" {
+  for_each = local.security_option.oidc_with_user_assigned_managed_identity || local.security_option.oidc_with_app_registration ? { for env in var.environments : env => env } : {}
+  depends_on = [
+    terraform_data.service_connection_oidc
+  ]
+  project_id            = data.azuredevops_project.example.id
+  service_endpoint_name = "service_connection_${each.value}"
+}
+
+data "azuredevops_serviceendpoint_azurerm" "mi" {
+  for_each = local.security_option.self_hosted_agents_with_managed_identity ? { for env in var.environments : env => env } : {}
+  depends_on = [
+    terraform_data.service_connection_managed_identity
+  ]
+  project_id            = data.azuredevops_project.example.id
+  service_endpoint_name = "service_connection_mi_${each.value}"
+}
+
+resource "azuredevops_pipeline_authorization" "oidc_endpoint" {
   for_each    = local.security_option.oidc_with_app_registration || local.security_option.oidc_with_user_assigned_managed_identity ? { for env in var.environments : env => env } : {}
   project_id  = data.azuredevops_project.example.id
-  resource_id = azuredevops_environment.example[each.value].id
-  type        = "environment"
+  resource_id = data.azuredevops_serviceendpoint_azurerm.oidc[each.value].service_endpoint_id 
+  type        = "endpoint"
   pipeline_id = azuredevops_build_definition.oidc[0].id
 }
 
-resource "azuredevops_pipeline_authorization" "mi" {
+resource "azuredevops_pipeline_authorization" "mi_endpoint" {
   for_each    = local.security_option.self_hosted_agents_with_managed_identity ? { for env in var.environments : env => env } : {}
   project_id  = data.azuredevops_project.example.id
-  resource_id = azuredevops_environment.example[each.value].id
+  resource_id = data.azuredevops_serviceendpoint_azurerm.mi[each.value].service_endpoint_id
   type        = "environment"
   pipeline_id = azuredevops_build_definition.mi[0].id
 }
