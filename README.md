@@ -87,8 +87,8 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 1. Type `Demo_OIDC` into the `Name` field.
 1. Click `Show all scopes` down at the bottom of the dialog.
 1. Check these scopes:
-   1. `Code`: `Full`
    1. `Build`: `Read & execute`
+   1. `Code`: `Full`
    1. `Environment`: `Read & manage`
    1. `Service Connections`: `Read, query, & manage`
    1. `Variable Groups`: `Read, create, & manage`
