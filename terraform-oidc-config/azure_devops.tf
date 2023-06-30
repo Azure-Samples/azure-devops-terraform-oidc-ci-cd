@@ -232,6 +232,6 @@ resource "azuredevops_pipeline_authorization" "mi_endpoint" {
   for_each    = local.security_option.self_hosted_agents_with_managed_identity ? { for env in var.environments : env => env } : {}
   project_id  = data.azuredevops_project.example.id
   resource_id = data.azuredevops_serviceendpoint_azurerm.mi[each.value].service_endpoint_id
-  type        = "environment"
+  type        = "endpoint"
   pipeline_id = azuredevops_build_definition.mi[0].id
 }
