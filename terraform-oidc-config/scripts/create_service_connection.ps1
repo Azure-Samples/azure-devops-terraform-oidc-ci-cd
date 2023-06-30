@@ -41,8 +41,6 @@ if($serviceConnectionExists) {
     Write-Host "Deleting service connection '${serviceConnectionName}'."
     $apiUri = "${organizationUrl}/_apis/serviceendpoint/endpoints/${serviceConnectionId}?projectIds=${projectId}&api-version=${apiVersion}"
 
-    $apiUri | Write-Host
-
     Invoke-RestMethod -Uri $apiUri `
                     -Method 'DELETE' `
                     -ContentType 'application/json' `
@@ -84,7 +82,7 @@ Invoke-RestMethod -Uri $apiUri `
                   -Headers $headers `
                   | Set-Variable serviceEndpoint
 
-$serviceEndpoint | ConvertTo-Json -Depth 4 | Write-Host
+$serviceEndpoint | ConvertTo-Json -Depth 4 | Write-Verbose
 if (!$serviceEndpoint) {
     Write-Error "Failed to create / update service connection '${serviceConnectionName}'"
     exit 1
