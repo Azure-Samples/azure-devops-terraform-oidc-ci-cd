@@ -35,6 +35,8 @@ stages:
   condition: ne(variables['Build.Reason'], 'PullRequest')
   variables:
     - group: dev
+    - name: serviceConnection
+      value: service_connection_dev
   jobs:
     - deployment: deploy
       displayName: Deploy with Terraform
@@ -51,31 +53,29 @@ stages:
               displayName: Install Terraform
               inputs:
                 terraformVersion: 'latest'
-            - pwsh: |
-                terraform init -backend-config=storage_account_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME) -backend-config=resource_group_name=$(BACKEND_AZURE_RESOURCE_GROUP_NAME)
-              displayName: Terraform Init
-              env:
-                ARM_CLIENT_ID: $(AZURE_CLIENT_ID)
-                ARM_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
-                ARM_TENANT_ID: $(AZURE_TENANT_ID)
-                ARM_USE_OIDC: true
-              workingDirectory: $(workingDirectory)
-            - pwsh: |
-                terraform apply --auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"
-              displayName: Terraform Apply
-              workingDirectory: $(workingDirectory)
-              env:
-                ARM_CLIENT_ID: $(AZURE_CLIENT_ID)
-                ARM_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
-                ARM_TENANT_ID: $(AZURE_TENANT_ID)
-                ARM_USE_OIDC: true
-      
+            - task: AzureCLI@2
+                displayName: Terraform Init and Apply
+                inputs:
+                  azureSubscription: '${{ variables.serviceConnection }}'
+                  scriptType: pscore
+                  scriptLocation: inlineScript
+                  inlineScript: |
+                    ./scripts/set_terraform_azurerm_variables.ps1 -Token $(System.AccessToken)
+                    terraform init -backend-config=storage_account_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME) -backend-config=resource_group_name=$(BACKEND_AZURE_RESOURCE_GROUP_NAME)
+                    terraform apply --auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"     
+                  useGlobalConfig: true
+                  addSpnToEnvironment: true
+                  failOnStandardError: true
+                  workingDirectory: $(workingDirectory)      
+
 - stage: deploy_to_test
   displayName: Deploy to Test
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: ne(variables['Build.Reason'], 'PullRequest')
   dependsOn: deploy_to_dev
-  pool: 
-        vmImage: ubuntu-latest 
+  variables:
+    - group: test
+    - name: serviceConnection
+      value: service_connection_test
   jobs:
     - deployment: deploy
       displayName: Deploy with Terraform
@@ -92,32 +92,29 @@ stages:
               displayName: Install Terraform
               inputs:
                 terraformVersion: 'latest'
-            - task: TerraformTaskV4@4
-              displayName: Terraform Init
-              inputs:
-                provider: 'azurerm'
-                command: 'init'
-                workingDirectory: '$(workingDirectory)'
-                backendServiceArm: '${{ variables.serviceConnection }}'
-                backendAzureRmResourceGroupName: '$(BACKEND_AZURE_RESOURCE_GROUP_NAME)'
-                backendAzureRmStorageAccountName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME)'
-                backendAzureRmContainerName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)'
-                backendAzureRmKey: 'terraform.tfstate'
-            - task: TerraformTaskV4@4
-              displayName: Terraform Apply
-              inputs:
-                provider: 'azurerm'
-                command: 'apply'
-                workingDirectory: '$(workingDirectory)'
-                commandOptions: '-auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"'
-                environmentServiceNameAzureRM: '${{ variables.serviceConnection }}'
+            - task: AzureCLI@2
+                displayName: Terraform Init and Apply
+                inputs:
+                  azureSubscription: '${{ variables.serviceConnection }}'
+                  scriptType: pscore
+                  scriptLocation: inlineScript
+                  inlineScript: |
+                    ./scripts/set_terraform_azurerm_variables.ps1 -Token $(System.AccessToken)
+                    terraform init -backend-config=storage_account_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME) -backend-config=resource_group_name=$(BACKEND_AZURE_RESOURCE_GROUP_NAME)
+                    terraform apply --auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"     
+                  useGlobalConfig: true
+                  addSpnToEnvironment: true
+                  failOnStandardError: true
+                  workingDirectory: $(workingDirectory) 
 
 - stage: deploy_to_prod
   displayName: Deploy to Prod
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: ne(variables['Build.Reason'], 'PullRequest')
   dependsOn: deploy_to_test
   variables:
     - group: prod
+    - name: serviceConnection
+      value: service_connection_prod
   jobs:
     - deployment: deploy
       displayName: Deploy with Terraform
@@ -134,22 +131,17 @@ stages:
               displayName: Install Terraform
               inputs:
                 terraformVersion: 'latest'
-            - task: TerraformTaskV4@4
-              displayName: Terraform Init
-              inputs:
-                provider: 'azurerm'
-                command: 'init'
-                workingDirectory: '$(workingDirectory)'
-                backendServiceArm: '${{ variables.serviceConnection }}'
-                backendAzureRmResourceGroupName: '$(BACKEND_AZURE_RESOURCE_GROUP_NAME)'
-                backendAzureRmStorageAccountName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME)'
-                backendAzureRmContainerName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)'
-                backendAzureRmKey: 'terraform.tfstate'
-            - task: TerraformTaskV4@4
-              displayName: Terraform Apply
-              inputs:
-                provider: 'azurerm'
-                command: 'apply'
-                workingDirectory: '$(workingDirectory)'
-                commandOptions: '-auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"'
-                environmentServiceNameAzureRM: '${{ variables.serviceConnection }}'
+            - task: AzureCLI@2
+                displayName: Terraform Init and Apply
+                inputs:
+                  azureSubscription: '${{ variables.serviceConnection }}'
+                  scriptType: pscore
+                  scriptLocation: inlineScript
+                  inlineScript: |
+                    ./scripts/set_terraform_azurerm_variables.ps1 -Token $(System.AccessToken)
+                    terraform init -backend-config=storage_account_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME) -backend-config=resource_group_name=$(BACKEND_AZURE_RESOURCE_GROUP_NAME)
+                    terraform apply --auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"     
+                  useGlobalConfig: true
+                  addSpnToEnvironment: true
+                  failOnStandardError: true
+                  workingDirectory: $(workingDirectory) 
