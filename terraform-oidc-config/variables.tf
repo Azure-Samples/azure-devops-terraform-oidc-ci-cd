@@ -1,6 +1,5 @@
 variable "prefix" {
   type    = string
-  default = "github-oidc-demo"
 }
 
 variable "location" {
@@ -10,7 +9,7 @@ variable "location" {
 
 variable "azure_devops_token" {
   type = string
-  #sensitive = true
+  sensitive = true
 }
 
 variable "azure_devops_organisation_prefix" {
@@ -20,12 +19,10 @@ variable "azure_devops_organisation_prefix" {
 
 variable "azure_devops_organisation_target" {
   type    = string
-  default = "my_organisation"
 }
 
 variable "azure_devops_project_target" {
   type    = string
-  default = "my_project"
 }
 
 variable "github_organisation_template" {

@@ -24,7 +24,7 @@ stages:
       - pwsh: terraform fmt -check
         displayName: Terraform Format Check
         workingDirectory: $(workingDirectory)
-      - pwsh: terraform init
+      - pwsh: terraform init -backend=false
         displayName: Terraform Init
         workingDirectory: $(workingDirectory)
       - pwsh: terraform validate

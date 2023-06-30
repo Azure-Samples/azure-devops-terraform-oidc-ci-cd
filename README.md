@@ -87,6 +87,7 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 1. Type `Demo_OIDC` into the `Name` field.
 1. Click `Show all scopes` down at the bottom of the dialog.
 1. Check these scopes:
+   1. `Agent Pools`: `Read & manage`
    1. `Build`: `Read & execute`
    1. `Code`: `Full`
    1. `Environment`: `Read & manage`
@@ -100,17 +101,17 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 1. Clone this repository to your local machine.
 1. Open the repo in Visual Studio Code. (Hint: In a terminal you can open Visual Studio Code by navigating to the folder and running `code .`).
 1. Navigate to the `terraform-oidc-config` folder and create a new file called `terraform.tfvars`.
-1. In the config file add the following:
+1. In the `terraform.tfvars` file add the following:
 ``` 
 prefix = "<your_initials>-<date_as_YYYYMMDD>"
 azure_devops_organisation_target = "<your_azure_devops_organisation_name>"
-azure_devops_project_name = "<your_azure_devops_project_name>"
+azure_devops_project_target = "<your_azure_devops_project_name>"
 ```
 e.g.
 ```
 prefix = "JFH-20221208"
 azure_devops_organisation_target = "my-organization"
-azure_devops_project_name = "my-project"
+azure_devops_project_target = "my-project"
 ```
 
 > NOTE if you wish to use the Options 2 or 3, then also add this setting to `terraform.tfvars`:
@@ -126,6 +127,7 @@ security_option = "oidc-with-app-registration"
 1. Open the Visual Studio Code Terminal and navigate the `terraform-oidc-config` folder.
 1. Run `az login` and follow the prompts to login to Azure with your Global Administrator account.
 1. Run `az account show`. If you are not connected to you test subscription, change it by running `az account set --subscription "<subscription-id>"`
+1. Run `terraform init`.
 1. Run `terraform apply`.
 1. You'll be prompted for the variable `var.azure_devops_token`. Paste in the PAT you generated earlier and hit enter.
 1. The plan will complete. Review the plan and see what is going to be created.
