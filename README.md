@@ -12,7 +12,7 @@ products:
 urlFragment: azure-devops-terraform-oidc-ci-cd
 ---
 
-# Using OIDC to Authenticate from Azure DevOps Pipelines to Azure for Terraform Deployments
+# Using Managed Identity or OIDC to Authenticate from Azure DevOps Pipelines to Azure for Terraform Deployments
 
 This is a two part sample. The first part demonstrates how to configure Azure and Azure DevOps for credential free deployment with Terraform. The second part demonstrates an end to end Continuous Delivery Pipeline for Terraform.
 
