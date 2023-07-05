@@ -26,7 +26,7 @@ if (![guid]::TryParse($account.user.name, [ref][guid]::Empty)) {
 }
 $env:ARM_CLIENT_ID       ??= $account.user.name
 $env:ARM_CLIENT_SECRET   ??= $env:servicePrincipalKey # requires addSpnToEnvironment: true
-$env:ARM_OIDC_TOKEN      ??= $env:idToken
+$env:ARM_OIDC_TOKEN      ??= $env:idToken # requires addSpnToEnvironment: true
 $env:ARM_SUBSCRIPTION_ID ??= $account.id  
 $env:ARM_TENANT_ID       ??= $account.tenantId
 $env:ARM_USE_CLI         ??= (!($env:idToken -or $env:servicePrincipalKey)).ToString().ToLower()
