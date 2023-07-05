@@ -4,69 +4,9 @@
     Prepares Terraform azure provider environment variables
  
 .EXAMPLE
-    ./set_terraform_azurerm_vars -Token $(System.AccessToken)
+    ./set_terraform_azurerm_vars
 #> 
 #Requires -Version 7.2
-
-param ( 
-    [Parameter(Mandatory=$false)]
-    [ValidateNotNullOrEmpty()]
-    [string]
-    $Token
-) 
-
-function Get-OidcRequestToken()
-{
-    if (!$Token) {
-        throw "Access Token not set"
-    }
-    return $Token
-}
-
-function Get-OidcRequestUrl()
-{
-    $serviceConnectionId = Get-ServiceConnectionId
-    if (!$serviceConnectionId) {
-        throw "Unable to determine service connection ID"
-    }
-    $oidcRequestUrl = "${env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${env:SYSTEM_TEAMPROJECTID}/_apis/distributedtask/hubs/build/plans/${env:SYSTEM_PLANID}/jobs/${env:SYSTEM_JOBID}/oidctoken?api-version=7.1-preview.1&serviceConnectionId=${serviceConnectionId}"
-    Write-Debug "OIDC Request URL: ${oidcRequestUrl}"
-    return $oidcRequestUrl
-}
-
-function Get-ServiceConnectionId()
-{
-    # Get Service Connection ID
-    Get-ChildItem -Path Env: -Recurse -Include ENDPOINT_DATA_* | Sort-Object -Property Name `
-                                                               | Select-Object -First 1 -ExpandProperty Name `
-                                                               | ForEach-Object { $_ -replace 'ENDPOINT_DATA_','' } `
-                                                               | Set-Variable serviceConnectionId
-
-    Write-Verbose "Service Connection ID: ${serviceConnectionId}"
-    return $serviceConnectionId
-}
-
-function New-OidcToken()
-{
-    Write-Verbose "`nRequesting OIDC token from Azure DevOps..."
-    Get-OidcRequestToken | Set-Variable oidcRequestToken
-    Get-OidcRequestUrl   | Set-Variable oidcRequestUrl
-    Write-Debug "OIDC Request URL: ${oidcRequestUrl}"
-    Invoke-RestMethod -Headers @{
-                        Authorization  = "Bearer ${oidcRequestToken}"
-                        'Content-Type' = 'application/json'
-                      } `
-                      -Uri "${oidcRequestUrl}" `
-                      -Method Post | Set-Variable oidcTokenResponse
-    $oidcToken = $oidcTokenResponse.oidcToken
-    if (!$oidcToken) {
-        throw "Could not get OIDC token"
-    }
-    if ($oidcToken -notmatch "^ey") {
-        throw "OIDC token in unexpected format"
-    }
-    return $oidcToken
-}
 
 if ($env:SYSTEM_DEBUG -eq "true") {
     $InformationPreference = "Continue"
@@ -86,16 +26,18 @@ if (![guid]::TryParse($account.user.name, [ref][guid]::Empty)) {
 }
 $env:ARM_CLIENT_ID       ??= $account.user.name
 $env:ARM_CLIENT_SECRET   ??= $env:servicePrincipalKey # requires addSpnToEnvironment: true
+$env:ARM_OIDC_TOKEN      ??= $env:idToken
 $env:ARM_SUBSCRIPTION_ID ??= $account.id  
 $env:ARM_TENANT_ID       ??= $account.tenantId
-$env:ARM_USE_CLI         ??= "false"
+$env:ARM_USE_CLI         ??= (!($env:idToken -or $env:servicePrincipalKey)).ToString().ToLower()
+$env:ARM_USE_OIDC        ??= ($env:idToken -ne $null).ToString().ToLower()
 
 if ($env:ARM_CLIENT_SECRET) {
     Write-Verbose "Using ARM_CLIENT_SECRET"
-} else {
-    $env:ARM_OIDC_TOKEN  ??= New-OidcToken
+} elseif ($env:ARM_OIDC_TOKEN) {
     Write-Verbose "Using ARM_OIDC_TOKEN"
-    $env:ARM_USE_OIDC    ??= "true"
+} else {
+    Write-Warning "No credentials found to propagate as ARM_* environment variables. Using ARM_USE_CLI = true."
 }
 Write-Host "`nTerraform azure provider environment variables:" -NoNewline
 Get-ChildItem -Path Env: -Recurse -Include ARM_* | ForEach-Object { 
