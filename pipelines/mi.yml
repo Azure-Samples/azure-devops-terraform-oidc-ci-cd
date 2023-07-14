@@ -74,7 +74,7 @@ stages:
       
 - stage: deploy_to_test
   displayName: Deploy to Test
-  condition: ne(variables['Build.Reason'], 'PullRequest')
+  condition: and(not(or(failed(), canceled())), ne(variables['Build.Reason'], 'PullRequest'))
   dependsOn: deploy_to_dev
   variables:
     - group: test
@@ -118,7 +118,7 @@ stages:
 
 - stage: deploy_to_prod
   displayName: Deploy to Prod
-  condition: ne(variables['Build.Reason'], 'PullRequest')
+  condition: and(not(or(failed(), canceled())), ne(variables['Build.Reason'], 'PullRequest'))
   dependsOn: deploy_to_test
   variables:
     - group: prod
