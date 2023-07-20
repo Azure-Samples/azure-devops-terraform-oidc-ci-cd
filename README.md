@@ -147,7 +147,7 @@ When deploying the example you will have selected to use the default Managed Ide
 
 1. Login to the [Azure Portal](https://portal.azure.com) with your Global Administrator account.
 1. Navigate to your Subscription and select `Resource groups`.
-1. Click the resource group post-fixed `identity` (e.g. `JFH-20221208-dev`).
+1. Click the resource group post-fixed `identity` (e.g. `JFH-20221208-identity`).
 1. Look for a `Managed Identity` resource post-fixed with `dev` and click it.
 1. Option 2 Only: 
    1. Click on `Federated Credentials`.
