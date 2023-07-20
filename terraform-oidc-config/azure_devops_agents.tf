@@ -6,37 +6,37 @@ locals {
   } : {}
   agents = local.security_option.self_hosted_agents_with_managed_identity ? {
     dev01 = {
-      name        = "aciado-${var.prefix}-dev-001"
+      name        = "aciado-${lower(var.prefix)}-dev-001"
       environment = "dev"
       identity    = azurerm_user_assigned_identity.example["dev"].id
       pool        = azuredevops_agent_pool.this["dev"].name
     }
     dev02 = {
-      name        = "aciado-${var.prefix}-dev-002"
+      name        = "aciado-${lower(var.prefix)}-dev-002"
       environment = "dev"
       identity    = azurerm_user_assigned_identity.example["dev"].id
       pool        = azuredevops_agent_pool.this["dev"].name
     }
     test01 = {
-      name        = "aciado-${var.prefix}-test-001"
+      name        = "aciado-${lower(var.prefix)}-test-001"
       environment = "test"
       identity    = azurerm_user_assigned_identity.example["test"].id
       pool        = azuredevops_agent_pool.this["test"].name
     }
     test02 = {
-      name        = "aciado-${var.prefix}-test-002"
+      name        = "aciado-${lower(var.prefix)}-test-002"
       environment = "test"
       identity    = azurerm_user_assigned_identity.example["test"].id
       pool        = azuredevops_agent_pool.this["test"].name
     }
     prod01 = {
-      name        = "aciado-${var.prefix}-prod-001"
+      name        = "aciado-${lower(var.prefix)}-prod-001"
       environment = "prod"
       identity    = azurerm_user_assigned_identity.example["prod"].id
       pool        = azuredevops_agent_pool.this["prod"].name
     }
     prod02 = {
-      name        = "aciado-${var.prefix}-prod-002"
+      name        = "aciado-${lower(var.prefix)}-prod-002"
       environment = "prod"
       identity    = azurerm_user_assigned_identity.example["prod"].id
       pool        = azuredevops_agent_pool.this["prod"].name

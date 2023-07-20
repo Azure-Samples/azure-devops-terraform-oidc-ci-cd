@@ -10,7 +10,7 @@ resource "azurerm_user_assigned_identity" "example" {
 }
 
 resource "azurerm_federated_identity_credential" "example" {
-  for_each            = local.user_assigned_managed_identity_environments
+  for_each            = local.security_option.oidc_with_user_assigned_managed_identity ? local.user_assigned_managed_identity_environments : {}
   name                = "${var.azure_devops_organisation_target}-${var.azure_devops_project_target}-${each.value}"
   resource_group_name = azurerm_resource_group.identity.name
   audience            = [local.default_audience_name]
