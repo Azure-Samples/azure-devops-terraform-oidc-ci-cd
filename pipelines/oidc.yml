@@ -67,7 +67,9 @@ stages:
                 useGlobalConfig: true
                 addSpnToEnvironment: true # This flag is required to set the idToken environment variable.
                 failOnStandardError: true
-                workingDirectory: $(workingDirectory)      
+                workingDirectory: $(workingDirectory)  
+              env:
+                ARM_USE_AZUREAD: true    
 
 - stage: deploy_to_test
   displayName: Deploy to Test
@@ -107,6 +109,8 @@ stages:
                 addSpnToEnvironment: true # This flag is required to set the idToken environment variable.
                 failOnStandardError: true
                 workingDirectory: $(workingDirectory) 
+              env:
+                ARM_USE_AZUREAD: true
 
 - stage: deploy_to_prod
   displayName: Deploy to Prod
@@ -146,3 +150,5 @@ stages:
                 addSpnToEnvironment: true # This flag is required to set the idToken environment variable.
                 failOnStandardError: true
                 workingDirectory: $(workingDirectory) 
+              env:
+                ARM_USE_AZUREAD: true

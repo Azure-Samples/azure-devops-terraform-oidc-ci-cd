@@ -16,13 +16,6 @@ resource "azurerm_storage_container" "example" {
 resource "azurerm_role_assignment" "storage_container" {
   for_each             = { for env in var.environments : env => env }
   scope                = azurerm_storage_container.example[each.value].resource_manager_id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = local.security_option.oidc_with_user_assigned_managed_identity || local.security_option.self_hosted_agents_with_managed_identity ? azurerm_user_assigned_identity.example[each.value].principal_id : azuread_service_principal.github_oidc[each.value].id
-}
-
-resource "azurerm_role_assignment" "storage_keys" {
-  for_each             = { for env in var.environments : env => env }
-  scope                = azurerm_storage_account.example.id
-  role_definition_name = "Storage Account Key Operator Service Role"
+  role_definition_name = "Storage Blob Data Owner"
   principal_id         = local.security_option.oidc_with_user_assigned_managed_identity || local.security_option.self_hosted_agents_with_managed_identity ? azurerm_user_assigned_identity.example[each.value].principal_id : azuread_service_principal.github_oidc[each.value].id
 }
