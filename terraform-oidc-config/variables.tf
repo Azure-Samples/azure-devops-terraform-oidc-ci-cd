@@ -1,5 +1,5 @@
 variable "prefix" {
-  type    = string
+  type = string
 }
 
 variable "location" {
@@ -8,7 +8,7 @@ variable "location" {
 }
 
 variable "azure_devops_token" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -18,11 +18,11 @@ variable "azure_devops_organisation_prefix" {
 }
 
 variable "azure_devops_organisation_target" {
-  type    = string
+  type = string
 }
 
 variable "azure_devops_project_target" {
-  type    = string
+  type = string
 }
 
 variable "github_organisation_template" {
