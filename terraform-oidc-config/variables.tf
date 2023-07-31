@@ -1,5 +1,5 @@
 variable "prefix" {
-  type    = string
+  type = string
 }
 
 variable "location" {
@@ -8,7 +8,7 @@ variable "location" {
 }
 
 variable "azure_devops_token" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -18,11 +18,11 @@ variable "azure_devops_organisation_prefix" {
 }
 
 variable "azure_devops_organisation_target" {
-  type    = string
+  type = string
 }
 
 variable "azure_devops_project_target" {
-  type    = string
+  type = string
 }
 
 variable "github_organisation_template" {
@@ -48,4 +48,9 @@ variable "security_option" {
     condition     = contains(["self-hosted-agents-with-managed-identity", "oidc-with-user-assigned-managed-identity", "oidc-with-app-registration"], var.security_option)
     error_message = "The security_option variable must be one of `self-hosted-agents-with-managed-identity`, `oidc-with-user-assigned-managed-identity` or `oidc-with-app-registration`."
   }
+}
+
+variable "use_legacy_issuer" {
+  type    = bool
+  default = true
 }
