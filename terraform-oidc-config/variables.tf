@@ -49,8 +49,3 @@ variable "security_option" {
     error_message = "The security_option variable must be one of `self-hosted-agents-with-managed-identity`, `oidc-with-user-assigned-managed-identity` or `oidc-with-app-registration`."
   }
 }
-
-variable "use_legacy_issuer" {
-  type    = bool
-  default = true
-}
