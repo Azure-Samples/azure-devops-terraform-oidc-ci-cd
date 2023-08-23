@@ -185,12 +185,12 @@ When deploying the example you will have selected to use the default Managed Ide
 #### State storage account
 
 1. Navigate to your Subscription and select `Resource groups`.
-1. Click the resource group post-fixed `state` (e.g. `JFH-20221208-dev`).
+1. Click the resource group post-fixed `state` (e.g. `JFH-20221208-state`).
 1. You should see a single storage account in there, click on it.
 1. Select `Containers`. You should see a `dev`, `test` and `prod` container.
 1. Select the `dev` container.
 1. Click `Access Control (IAM)` and select `Role assignments`.
-1. Scroll down to `Storage Blob Data Contributor`. You should see your `dev` Service Principal or Managed Identity has been assigned that role.
+1. Scroll down to `Storage Blob Data Owner`. You should see your `dev` Service Principal or Managed Identity has been assigned that role.
 
 #### Azure DevOps Repository
 
