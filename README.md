@@ -79,6 +79,16 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 
 ## Demo / Lab
 
+### Install the Microsoft DevLabs Terraform Task in your Azure DevOps Organisation
+1. Navigate to [dev.azure.com](https://dev.azure.com).
+1. Login and navigate to your organisation.
+1. Click on the marketplace icon (shopping bag) in the top right of the screen and select `Browse Marketplace`.
+1. Type `terraform` into the search bar and hit enter.
+1. Find the task published by `Microsoft DevLabs` and click on it. ([Here is a shortcut to take you directly there](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks))
+1. Click `Get if free`.
+1. Select your organisation from the drop down list and click `Install`.
+1. > NOTE: If you are not an organisation administator, you will need to click `Request` instead and then prompt your admin person to approve it.
+
 ### Generate a PAT (Personal Access Token) in Azure DevOps
 
 1. Navigate to [dev.azure.com](https://dev.azure.com).
@@ -143,18 +153,19 @@ security_option = "oidc-with-app-registration"
 
 When deploying the example you will have selected to use the default Managed Identity approach or the Service Principal approach choose the relevant option below.
 
-##### Option 1 and 2: Managed Identity
+##### Option 1 and 2 Only: Managed Identity
 
 1. Login to the [Azure Portal](https://portal.azure.com) with your Global Administrator account.
 1. Navigate to your Subscription and select `Resource groups`.
 1. Click the resource group post-fixed `identity` (e.g. `JFH-20221208-identity`).
 1. Look for a `Managed Identity` resource post-fixed with `dev` and click it.
-1. Option 2 Only: 
-   1. Click on `Federated Credentials`.
-   1. There should only be one credential in the list, select that and take a look at the configuration.
-   1. Examine the `Subject identifier` and ensure you understand how it is built up.
 
-##### Option 3: Service Principal
+#### Option 2 Only: Federated Credentials
+1. Click on `Federated Credentials`.
+1. There should only be one credential in the list, select that and take a look at the configuration.
+1. Examine the `Subject identifier` and ensure you understand how it is built up.
+
+##### Option 3 Only: Service Principal
 
 1. Login to the [Azure Portal](https://portal.azure.com) with your Global Administrator account.
 1. Navigate to `Azure Active Directory` and select `App registrations`.
@@ -199,6 +210,20 @@ When deploying the example you will have selected to use the default Managed Ide
 1. Hover over `Pipelines`, then select `Library`.
 1. You should see 3 variable groups called `dev`, `test` and `prod`.
 1. Click on the `dev` environment and take a look at the variables.
+
+#### Azure DevOps Service Connections
+
+1. Click `Project Settings` in the bottom left corner.
+1. Click `Service connections` under the `Pipelines` section.
+1. There should be 3 service connections configured for Managed Identity or Workload Identity Federation depending on the option you choose.
+1. Click on one of the service connections and click `Edit` to look at the settings.
+
+#### Option 1 Only: Azure DevOps Agent Pools
+
+1. Click `Project Settings` in the bottom left corner.
+1. Click `Agent pools` under the `Pipelines` section.
+1. There should be 3 new agent pools configured.
+1. Click on one of them and navigate to the `Agents` tab, you should see 2 agents in the pool ready to accept runs.
 
 #### Azure DevOps Pipeline
 
