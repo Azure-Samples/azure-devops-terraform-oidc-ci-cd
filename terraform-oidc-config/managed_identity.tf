@@ -11,10 +11,10 @@ resource "azurerm_user_assigned_identity" "example" {
 
 resource "azurerm_federated_identity_credential" "example" {
   for_each            = local.security_option.oidc_with_user_assigned_managed_identity ? local.user_assigned_managed_identity_environments : {}
+  parent_id           = azurerm_user_assigned_identity.example[each.value].id
   name                = "${var.azure_devops_organisation_target}-${var.azure_devops_project_target}-${each.value}"
   resource_group_name = azurerm_resource_group.identity.name
   audience            = [local.default_audience_name]
-  issuer              = local.issuer_url
-  parent_id           = azurerm_user_assigned_identity.example[each.value].id
-  subject             = "sc://${var.azure_devops_organisation_target}/${var.azure_devops_project_target}/service_connection_${each.value}"
+  issuer              = azuredevops_serviceendpoint_azurerm.oidc[each.key].workload_identity_federation_issuer
+  subject             = azuredevops_serviceendpoint_azurerm.oidc[each.key].workload_identity_federation_subject
 }

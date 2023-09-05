@@ -1,6 +1,5 @@
 locals {
   default_audience_name = "api://AzureADTokenExchange"
-  issuer_url            = "https://vstoken.dev.azure.com/${local.azure_devops_organization_id}"
   security_option = {
     self_hosted_agents_with_managed_identity = var.security_option == "self-hosted-agents-with-managed-identity"
     oidc_with_user_assigned_managed_identity = var.security_option == "oidc-with-user-assigned-managed-identity"

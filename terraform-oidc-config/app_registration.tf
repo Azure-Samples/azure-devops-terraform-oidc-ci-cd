@@ -22,6 +22,6 @@ resource "azuread_application_federated_identity_credential" "github_oidc" {
   display_name          = "${var.azure_devops_organisation_target}-${var.azure_devops_project_target}-${each.value}"
   description           = "Deployments for ${var.azure_devops_organisation_target}/${var.azure_devops_project_target} for environment ${each.value}"
   audiences             = [local.default_audience_name]
-  issuer                = local.issuer_url
-  subject               = "sc://${var.azure_devops_organisation_target}/${var.azure_devops_project_target}/service_connection_${each.value}"
+  issuer                = azuredevops_serviceendpoint_azurerm.oidc[each.key].workload_identity_federation_issuer
+  subject               = azuredevops_serviceendpoint_azurerm.oidc[each.key].workload_identity_federation_subject
 }
