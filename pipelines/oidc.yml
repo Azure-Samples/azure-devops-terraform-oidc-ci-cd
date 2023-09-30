@@ -78,6 +78,34 @@ stages:
               env:
                 ARM_USE_AZUREAD: true
             
+            ### The follow is an example of using the Jason Johnson task instead of DevLabs
+            # - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@1
+            #   displayName: Install Terraform
+            #   inputs:
+            #     terraformVersion: 'latest'
+            # - task: TerraformCLI@1
+            #   inputs:
+            #     command: 'init'
+            #     workingDirectory: '$(workingDirectory)'
+            #     backendType: 'azurerm'
+            #     backendServiceArm: '${{ variables.serviceConnection }}'
+            #     backendAzureRmResourceGroupName: '$(BACKEND_AZURE_RESOURCE_GROUP_NAME)'
+            #     backendAzureRmStorageAccountName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME)'
+            #     backendAzureRmContainerName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)'
+            #     backendAzureRmKey: 'terraform.tfstate'
+            #     allowTelemetryCollection: true
+            #   env:
+            #     ARM_USE_AZUREAD: true
+            # - task: TerraformCLI@1
+            #   inputs:
+            #     command: 'apply'
+            #     workingDirectory: '$(workingDirectory)'
+            #     environmentServiceName: '${{ variables.serviceConnection }}'
+            #     commandOptions: '-auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"'
+            #     allowTelemetryCollection: true
+            #   env:
+            #     ARM_USE_AZUREAD: true
+
             ### The following task shows an example of using OIDC outside of one of the Terraform tasks, should you need something very specific and custom that is not supported by the tasks yet. ###
             #- task: AzureCLI@2
             #  displayName: Terraform Init and Apply
