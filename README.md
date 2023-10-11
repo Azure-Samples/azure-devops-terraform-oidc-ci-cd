@@ -44,9 +44,9 @@ This sample includes the following features:
 
 There are three approaches shown in the code for credential free deployment of Azure resources from Azure DevOps.
 
-The preferred method is to use OIDC with a User Assigned Managed Identity since this does not require elevated permissions in Azure Active Directory and has a longer token timeout than an App Registration. However the code also shows the Service Principal approach for those that prefer that method. If you choose the Service Principal approach then the account creating the infrastructure will need permission to create Applications in Azure Active Directory. 
+The preferred method is to use OIDC with a User Assigned Managed Identity since this does not require elevated permissions in Azure Active Directory and has a longer token timeout than an App Registration. However the code also shows the Service Principal approach for those that prefer that method. If you choose the Service Principal approach then the account creating the infrastructure will need permission to create Applications in Azure Active Directory.
 
-The default option is Self Hosted Agents with Managed Identities since OIDC is still in private preview.
+The default option is `oidc-with-user-assigned-managed-identity`.
 
 #### Option 1: `self-hosted-agents-with-managed-identity`
 
@@ -112,7 +112,7 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 1. Open the repo in Visual Studio Code. (Hint: In a terminal you can open Visual Studio Code by navigating to the folder and running `code .`).
 1. Navigate to the `terraform-oidc-config` folder and create a new file called `terraform.tfvars`.
 1. In the `terraform.tfvars` file add the following:
-``` 
+```
 prefix = "<your_initials>-<date_as_YYYYMMDD>"
 azure_devops_organisation_target = "<your_azure_devops_organisation_name>"
 azure_devops_project_target = "<your_azure_devops_project_name>"

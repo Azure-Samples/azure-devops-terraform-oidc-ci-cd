@@ -42,7 +42,7 @@ variable "environments" {
 
 variable "security_option" {
   type        = string
-  default     = "self-hosted-agents-with-managed-identity"
+  default     = "oidc-with-user-assigned-managed-identity"
   description = "There are three options `self-hosted-agents-with-managed-identity`, `oidc-with-user-assigned-managed-identity` and `oidc-with-app-registration`."
   validation {
     condition     = contains(["self-hosted-agents-with-managed-identity", "oidc-with-user-assigned-managed-identity", "oidc-with-app-registration"], var.security_option)

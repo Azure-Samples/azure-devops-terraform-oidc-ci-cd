@@ -1,6 +1,4 @@
-# NOTE: Support for Terraform in Azure DevOps OIDC is still in private preview. You'll need to get access to the preview to use this pipeline.
-
-trigger: 
+trigger:
 - main
 
 variables:
@@ -12,7 +10,7 @@ stages:
   displayName: Validation
   condition: eq(variables['Build.Reason'], 'PullRequest')
   jobs:
-    - job: 
+    - job:
       displayName: Validate Terraform
       pool:
         vmImage: ubuntu-latest
@@ -41,8 +39,8 @@ stages:
   jobs:
     - deployment: deploy
       displayName: Deploy with Terraform
-      pool: 
-        vmImage: ubuntu-latest 
+      pool:
+        vmImage: ubuntu-latest
       environment: dev
       strategy:
         runOnce:
@@ -116,13 +114,13 @@ stages:
             #    inlineScript: |
             #      ./../scripts/set_terraform_azurerm_vars.ps1
             #      terraform init -backend-config=storage_account_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME) -backend-config=resource_group_name=$(BACKEND_AZURE_RESOURCE_GROUP_NAME)
-            #      terraform apply --auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"     
+            #      terraform apply --auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"
             #    useGlobalConfig: true
             #    addSpnToEnvironment: true # This flag is required to set the idToken environment variable.
             #    failOnStandardError: true
-            #    workingDirectory: $(workingDirectory)  
+            #    workingDirectory: $(workingDirectory)
             #  env:
-            #    ARM_USE_AZUREAD: true    
+            #    ARM_USE_AZUREAD: true
 
 - stage: deploy_to_test
   displayName: Deploy to Test
@@ -135,7 +133,7 @@ stages:
   jobs:
     - deployment: deploy
       displayName: Deploy with Terraform
-      pool: 
+      pool:
         vmImage: ubuntu-latest
       environment: test
       strategy:
@@ -183,8 +181,8 @@ stages:
   jobs:
     - deployment: deploy
       displayName: Deploy with Terraform
-      pool: 
-        vmImage: ubuntu-latest 
+      pool:
+        vmImage: ubuntu-latest
       environment: prod
       strategy:
         runOnce:
