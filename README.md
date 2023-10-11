@@ -124,10 +124,10 @@ azure_devops_organisation_target = "my-organization"
 azure_devops_project_target = "my-project"
 ```
 
-> NOTE if you wish to use the Options 2 or 3, then also add this setting to `terraform.tfvars`:
+> NOTE if you wish to use the Options 1 or 3, then also add this setting to `terraform.tfvars`:
 
 ```
-security_option = "oidc-with-user-assigned-managed-identity"
+security_option = "self-hosted-agents-with-managed-identity"
 OR
 security_option = "oidc-with-app-registration"
 ```
