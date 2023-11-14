@@ -1,4 +1,4 @@
-trigger: 
+trigger:
 - main
 
 variables:
@@ -10,7 +10,7 @@ stages:
   displayName: Validation
   condition: eq(variables['Build.Reason'], 'PullRequest')
   jobs:
-    - job: 
+    - job:
       displayName: Validate Terraform
       pool:
         vmImage: ubuntu-latest

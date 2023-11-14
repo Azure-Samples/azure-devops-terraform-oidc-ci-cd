@@ -1,5 +1,10 @@
+resource "random_string" "random" {
+  length  = 4
+  special = false
+}
+
 resource "azurerm_storage_account" "example" {
-  name                     = "${lower(replace(var.prefix, "-", ""))}tfstate"
+  name                     = "${lower(replace(var.prefix, "-", ""))}tfstate${lower(random_string.random.result)}"
   resource_group_name      = azurerm_resource_group.state.name
   location                 = var.location
   account_tier             = "Standard"
