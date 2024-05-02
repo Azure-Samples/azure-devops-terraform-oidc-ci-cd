@@ -63,18 +63,24 @@ stages:
                 backendAzureRmStorageAccountName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME)'
                 backendAzureRmContainerName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)'
                 backendAzureRmKey: 'terraform.tfstate'
-              env:
-                ARM_USE_AZUREAD: true # This environment variable tells the backend to use AzureAD auth rather than trying a create a key. It means we can limit the permissions applied to the storage account and container to least priviledge: https://developer.hashicorp.com/terraform/language/settings/backends/azurerm#use_azuread_auth
+                backendAzureRmUseEnvironmentVariablesForAuthentication: true
+                backendAzureRmUseEntraIdForAuthentication: true
+            - task: TerraformTaskV4@4
+              displayName: Terraform Plan
+              inputs:
+                provider: 'azurerm'
+                command: 'plan'
+                workingDirectory: '$(workingDirectory)'
+                commandOptions: '-var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)" -out tfplan'
+                environmentServiceNameAzureRM: '${{ variables.serviceConnection }}'
             - task: TerraformTaskV4@4
               displayName: Terraform Apply
               inputs:
                 provider: 'azurerm'
                 command: 'apply'
                 workingDirectory: '$(workingDirectory)'
-                commandOptions: '-auto-approve -var="resource_group_name=$(AZURE_RESOURCE_GROUP_NAME)"'
+                commandOptions: '-auto-approve tfplan'
                 environmentServiceNameAzureRM: '${{ variables.serviceConnection }}'
-              env:
-                ARM_USE_AZUREAD: true
             
             ### The follow is an example of using the Jason Johnson task instead of DevLabs
             # - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@1
