@@ -32,9 +32,9 @@ This is a two part sample. The first part demonstrates how to configure Azure an
 
 This sample includes the following features:
 
-* Option 1: Setup 3 Azure User Assigned Managed Identities with Self-hosted Azure DevOps agents in Azure Container Instances.
-* Option 2: Setup 3 Azure User Assigned Managed Identities with Federation ready for Azure DevOps OIDC.
-* Option 3: Setup 3 Azure App Registrations (Service Principals) with Federation ready for Azure DevOps OIDC.
+* Option 1: Setup 3 Azure User Assigned Managed Identities with Federation ready for Azure DevOps OIDC.
+* Option 2: Setup 3 Azure App Registrations (Service Principals) with Federation ready for Azure DevOps OIDC.
+* Option 3: Setup 3 Azure User Assigned Managed Identities with Self-hosted Azure DevOps agents in Azure Container Instances.
 * Setup an Azure Storage Account for State file management.
 * Setup Azure DevOps repository and environments ready to deploy Terraform with OIDC.
 * Run a Continuous Delivery pipeline for Terraform using OIDC auth for state and deploying resources to Azure.
@@ -46,19 +46,19 @@ There are three approaches shown in the code for credential free deployment of A
 
 The preferred method is to use OIDC with a User Assigned Managed Identity since this does not require elevated permissions in Azure Active Directory and has a longer token timeout than an App Registration. However the code also shows the Service Principal approach for those that prefer that method. If you choose the Service Principal approach then the account creating the infrastructure will need permission to create Applications in Azure Active Directory.
 
-The default option is `oidc-with-user-assigned-managed-identity`.
+The default option is Option 1: `oidc-with-user-assigned-managed-identity`.
 
-#### Option 1: `self-hosted-agents-with-managed-identity`
-
-This option will create self hosted agents and service connections for the managed identities associated with those agents.
-
-#### Option 2: `oidc-with-user-assigned-managed-identity`
+#### Option 1: `oidc-with-user-assigned-managed-identity`
 
 This option will create managed identities configured for federation and service connections for them.
 
 #### Option 3: `oidc-with-app-registration`
 
 This option will create app registrations configured for federation and service connections for them.
+
+#### Option 3: `self-hosted-agents-with-managed-identity`
+
+This option will create self hosted agents and service connections for the managed identities associated with those agents.
 
 ## Getting Started
 
@@ -153,7 +153,7 @@ security_option = "oidc-with-app-registration"
 
 When deploying the example you will have selected to use the default Managed Identity approach or the Service Principal approach choose the relevant option below.
 
-##### Option 1 and 2 Only: Managed Identity
+##### Option 1 and 3 Only: Managed Identity
 
 1. Login to the [Azure Portal](https://portal.azure.com) with your Global Administrator account.
 1. Navigate to your Subscription and select `Resource groups`.
@@ -165,7 +165,7 @@ When deploying the example you will have selected to use the default Managed Ide
 1. There should only be one credential in the list, select that and take a look at the configuration.
 1. Examine the `Subject identifier` and ensure you understand how it is built up.
 
-##### Option 3 Only: Service Principal
+##### Option 2 Only: Service Principal
 
 1. Login to the [Azure Portal](https://portal.azure.com) with your Global Administrator account.
 1. Navigate to `Azure Active Directory` and select `App registrations`.
@@ -218,7 +218,7 @@ When deploying the example you will have selected to use the default Managed Ide
 1. There should be 3 service connections configured for Managed Identity or Workload Identity Federation depending on the option you choose.
 1. Click on one of the service connections and click `Edit` to look at the settings.
 
-#### Option 1 Only: Azure DevOps Agent Pools
+#### Option 3 Only: Azure DevOps Agent Pools
 
 1. Click `Project Settings` in the bottom left corner.
 1. Click `Agent pools` under the `Pipelines` section.
