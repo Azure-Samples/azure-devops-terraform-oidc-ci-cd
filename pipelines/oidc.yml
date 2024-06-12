@@ -163,6 +163,8 @@ stages:
                 backendAzureRmStorageAccountName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME)'
                 backendAzureRmContainerName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)'
                 backendAzureRmKey: 'terraform.tfstate'
+                backendAzureRmUseEnvironmentVariablesForAuthentication: true
+                backendAzureRmUseEntraIdForAuthentication: true
               env:
                 ARM_USE_AZUREAD: true
             - task: TerraformTaskV4@4
@@ -211,6 +213,8 @@ stages:
                 backendAzureRmStorageAccountName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_NAME)'
                 backendAzureRmContainerName: '$(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)'
                 backendAzureRmKey: 'terraform.tfstate'
+                backendAzureRmUseEnvironmentVariablesForAuthentication: true
+                backendAzureRmUseEntraIdForAuthentication: true
               env:
                 ARM_USE_AZUREAD: true
             - task: TerraformTaskV4@4

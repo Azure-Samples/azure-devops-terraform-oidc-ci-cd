@@ -25,6 +25,11 @@ variable "azure_devops_project_target" {
   type = string
 }
 
+variable "azure_devops_create_project" {
+  type    = bool
+  default = true
+}
+
 variable "github_organisation_template" {
   type    = string
   default = "Azure-Samples"
