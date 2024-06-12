@@ -4,15 +4,15 @@ languages:
 - terraform
 - hcl
 - yaml
-name: Using Azure DevOps Pipelines Managed Identity or OpenID Connect (OIDC) with Azure for Terraform Deployments
-description: A sample showing how to configure Azure DevOps Managed Identity or OpenID Connect (OIDC) connection to Azure with Terraform and then use that configuration to deploy resources with Terraform.
+name: Using Azure DevOps Pipelines Workload identity federation (OIDC) or Managed Identity with Azure for Terraform Deployments
+description: A sample showing how to configure Azure DevOps Workload identity federation (OIDC) or Managed Identity connection to Azure with Terraform and then use that configuration to deploy resources with Terraform.
 products:
 - azure
 - azure-devops
 urlFragment: azure-devops-terraform-oidc-ci-cd
 ---
 
-# Using Managed Identity or OIDC to Authenticate from Azure DevOps Pipelines to Azure for Terraform Deployments
+# Using Azure DevOps Pipelines Workload identity federation (OIDC) or Managed Identity with Azure for Terraform Deployments
 
 This is a two part sample. The first part demonstrates how to configure Azure and Azure DevOps for credential free deployment with Terraform. The second part demonstrates an end to end Continuous Delivery Pipeline for Terraform.
 
@@ -32,19 +32,19 @@ This is a two part sample. The first part demonstrates how to configure Azure an
 
 This sample includes the following features:
 
-* Option 1: Setup 3 Azure User Assigned Managed Identities with Federation ready for Azure DevOps OIDC.
-* Option 2: Setup 3 Azure App Registrations (Service Principals) with Federation ready for Azure DevOps OIDC.
+* Option 1: Setup 3 Azure User Assigned Managed Identities with Federation ready for Azure DevOps Workload identity federation (OIDC).
+* Option 2: Setup 3 Azure App Registrations (Service Principals) with Federation ready for Azure DevOps Workload identity federation (OIDC).
 * Option 3: Setup 3 Azure User Assigned Managed Identities with Self-hosted Azure DevOps agents in Azure Container Instances.
 * Setup an Azure Storage Account for State file management.
-* Setup Azure DevOps repository and environments ready to deploy Terraform with OIDC.
-* Run a Continuous Delivery pipeline for Terraform using OIDC auth for state and deploying resources to Azure.
+* Setup Azure DevOps repository and environments ready to deploy Terraform with Workload identity federation (OIDC).
+* Run a Continuous Delivery pipeline for Terraform using Workload identity federation (OIDC) auth for state and deploying resources to Azure.
 * Run a Pull Request workflow with some basic static analysis.
 
-### Self Hosted Agent with Managed Identity, OIDC Service Principal or OIDC Managed Identity
+### Self Hosted Agent with Workload identity federation (OIDC) or Managed Identity
 
 There are three approaches shown in the code for credential free deployment of Azure resources from Azure DevOps.
 
-The preferred method is to use OIDC with a User Assigned Managed Identity since this does not require elevated permissions in Azure Active Directory and has a longer token timeout than an App Registration. However the code also shows the Service Principal approach for those that prefer that method. If you choose the Service Principal approach then the account creating the infrastructure will need permission to create Applications in Azure Active Directory.
+The preferred method is to use Workload identity federation (OIDC) with a User Assigned Managed Identity since this does not require elevated permissions in Azure Entra ID and has a longer token timeout than an App Registration (Service Principal). However the code also shows the App Registration (Service Principal) approach for those that prefer that method. If you choose the App Registration (Service Principal) approach then the account creating the infrastructure will need permission to create Applications in Azure Active Directory.
 
 The default option is Option 1: `oidc-with-user-assigned-managed-identity`.
 
@@ -124,7 +124,7 @@ azure_devops_organisation_target = "my-organization"
 azure_devops_project_target = "my-project"
 ```
 
-> NOTE if you wish to use the Options 1 or 3, then also add this setting to `terraform.tfvars`:
+> NOTE if you wish to use Options 2 or 3, then also add this setting to `terraform.tfvars`:
 
 ```
 security_option = "self-hosted-agents-with-managed-identity"
