@@ -21,7 +21,7 @@ This is a two part sample. The first part demonstrates how to configure Azure an
 | File/folder | Description |
 |-------------|-------------|
 | `terraform-example-deploy` | Some Terraform with Azure Resources for the demo to deploy. |
-| `terraform-oidc-config` | The Terraform to configure Azure and Azure DevOps ready for Managed Identity or OIDC authenticaton. |
+| `terraform-oidc-config` | The Terraform to configure Azure and Azure DevOps ready for Workload identity federation (OIDC) or Managed Identity authenticaton. |
 | `.gitignore` | Define what to ignore at commit time. |
 | `CHANGELOG.md` | List of changes to the sample. |
 | `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
