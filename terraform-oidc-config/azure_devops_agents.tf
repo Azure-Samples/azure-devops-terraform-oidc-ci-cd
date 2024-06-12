@@ -53,13 +53,13 @@ resource "azuredevops_agent_pool" "this" {
 
 resource "azuredevops_agent_queue" "this" {
   for_each      = local.agent_pools
-  project_id    = data.azuredevops_project.example.id
+  project_id    = local.azure_devops_project_id
   agent_pool_id = azuredevops_agent_pool.this[each.key].id
 }
 
 resource "azuredevops_pipeline_authorization" "this" {
   for_each    = local.agent_pools
-  project_id  = data.azuredevops_project.example.id
+  project_id  = local.azure_devops_project_id
   resource_id = azuredevops_agent_queue.this[each.key].id
   type        = "queue"
   pipeline_id = azuredevops_build_definition.mi[0].id
