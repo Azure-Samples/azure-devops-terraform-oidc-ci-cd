@@ -102,6 +102,7 @@ The instructions for this sample are in the form of a Lab. Follow along with the
    1. `Code`: `Full`
    1. `Environment`: `Read & manage`
    1. `Service Connections`: `Read, query, & manage`
+   1. `Project and Team`: `Read, write, & manage`
    1. `Variable Groups`: `Read, create, & manage`
 1. Click `Create`
 1. > IMPORTANT: Copy the token and save it somewhere.
