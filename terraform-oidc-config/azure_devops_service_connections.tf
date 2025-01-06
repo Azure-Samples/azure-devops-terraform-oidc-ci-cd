@@ -5,7 +5,7 @@ resource "azuredevops_serviceendpoint_azurerm" "oidc" {
   description                            = "Managed by Terraform"
   service_endpoint_authentication_scheme = "WorkloadIdentityFederation"
   credentials {
-    serviceprincipalid = local.security_option.oidc_with_app_registration ? azuread_application.github_oidc[each.value].application_id : azurerm_user_assigned_identity.example[each.value].client_id
+    serviceprincipalid = local.security_option.oidc_with_app_registration ? azuread_application.github_oidc[each.value].client_id : azurerm_user_assigned_identity.example[each.value].client_id
   }
   azurerm_spn_tenantid      = data.azurerm_client_config.current.tenant_id
   azurerm_subscription_id   = data.azurerm_client_config.current.subscription_id

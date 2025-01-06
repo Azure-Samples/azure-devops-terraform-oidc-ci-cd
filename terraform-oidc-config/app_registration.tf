@@ -12,16 +12,16 @@ resource "azuread_application" "github_oidc" {
 }
 
 resource "azuread_service_principal" "github_oidc" {
-  for_each       = local.app_registration_environments
-  application_id = azuread_application.github_oidc[each.value].application_id
+  for_each  = local.app_registration_environments
+  client_id = azuread_application.github_oidc[each.value].client_id
 }
 
 resource "azuread_application_federated_identity_credential" "github_oidc" {
-  for_each              = local.app_registration_environments
-  application_object_id = azuread_application.github_oidc[each.value].object_id
-  display_name          = "${var.azure_devops_organisation_target}-${var.azure_devops_project_target}-${each.value}"
-  description           = "Deployments for ${var.azure_devops_organisation_target}/${var.azure_devops_project_target} for environment ${each.value}"
-  audiences             = [local.default_audience_name]
-  issuer                = azuredevops_serviceendpoint_azurerm.oidc[each.key].workload_identity_federation_issuer
-  subject               = azuredevops_serviceendpoint_azurerm.oidc[each.key].workload_identity_federation_subject
+  for_each       = local.app_registration_environments
+  application_id = "/applications/${azuread_application.github_oidc[each.value].object_id}"
+  display_name   = "${var.azure_devops_organisation_target}-${var.azure_devops_project_target}-${each.value}"
+  description    = "Deployments for ${var.azure_devops_organisation_target}/${var.azure_devops_project_target} for environment ${each.value}"
+  audiences      = [local.default_audience_name]
+  issuer         = azuredevops_serviceendpoint_azurerm.oidc[each.key].workload_identity_federation_issuer
+  subject        = azuredevops_serviceendpoint_azurerm.oidc[each.key].workload_identity_federation_subject
 }
