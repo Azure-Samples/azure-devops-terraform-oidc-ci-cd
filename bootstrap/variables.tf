@@ -35,6 +35,15 @@ variable "use_self_hosted_agents" {
   default = true
 }
 
+variable "self_hosted_agent_type" {
+  type    = string
+  default = "azure_container_instance"
+  validation {
+    condition     = contains(["azure_container_app", "azure_container_instance"], var.self_hosted_agent_type)
+    error_message = "self_hosted_agent_type must be either 'azure_container_app' or 'azure_container_instance'."
+  }
+}
+
 variable "environments" {
   type = map(object({
     display_name          = string

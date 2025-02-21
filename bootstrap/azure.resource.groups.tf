@@ -13,7 +13,7 @@ locals {
   } : {})
 
   resource_groups_environments = { for env_key, env_value in var.environments : env_key => {
-    name = "rg-${var.postfix}-${env_key}"
+    name = "rg-${var.postfix}-env-${env_key}"
     role_assignments = {
       reader = {
         role_definition_id_or_name = "Reader"

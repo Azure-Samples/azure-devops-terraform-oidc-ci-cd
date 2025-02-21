@@ -1,16 +1,22 @@
+locals {
+  default_branch = "refs/heads/main"
+}
+
 resource "azuredevops_git_repository" "this" {
-  depends_on = [azuredevops_environment.this]
-  project_id = local.azure_devops_project_id
-  name       = "${var.postfix}-demo"
+  depends_on     = [azuredevops_environment.this]
+  project_id     = local.azure_devops_project_id
+  name           = "${var.postfix}-demo"
+  default_branch = local.default_branch
   initialization {
     init_type = "Clean"
   }
 }
 
 resource "azuredevops_git_repository" "template" {
-  depends_on = [azuredevops_environment.this]
-  project_id = local.azure_devops_project_id
-  name       = "${var.postfix}-demo-template"
+  depends_on     = [azuredevops_environment.this]
+  project_id     = local.azure_devops_project_id
+  name           = "${var.postfix}-demo-template"
+  default_branch = local.default_branch
   initialization {
     init_type = "Clean"
   }
@@ -40,6 +46,7 @@ locals {
       service_connection_name_plan  = "service_connection_${environment_key}-plan"
       service_connection_name_apply = "service_connection_${environment_key}-apply"
       environment_name              = environment_key
+      dependent_environment         = environment_value.dependent_environment
     } }
   }
 
@@ -55,7 +62,7 @@ resource "azuredevops_git_repository_file" "this" {
   repository_id       = azuredevops_git_repository.this.id
   file                = each.key
   content             = each.value.content
-  branch              = "refs/head/${azuredevops_git_repository.this.default_branch}"
+  branch              = local.default_branch
   commit_message      = "[skip ci]"
   overwrite_on_create = true
 }
@@ -65,7 +72,7 @@ resource "azuredevops_git_repository_file" "template" {
   repository_id       = azuredevops_git_repository.template.id
   file                = each.key
   content             = each.value.content
-  branch              = "refs/head/${azuredevops_git_repository.template.default_branch}"
+  branch              = local.default_branch
   commit_message      = "[skip ci]"
   overwrite_on_create = true
 }
