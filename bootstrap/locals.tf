@@ -15,10 +15,10 @@ locals {
   }
   environment_split = { for environment_split in flatten([for env_key, env_value in var.environments : [
     for split_key, split_value in local.environment_split_type : {
-      composite_key     = "${env_key}-${split_key}"
-      environment       = env_key
-      type              = split_key
-      required_template = split_key == local.environment_split_type.plan ? "ci-template.yaml" : "cd-template.yaml"
+      composite_key      = "${env_key}-${split_key}"
+      environment        = env_key
+      type               = split_key
+      required_templates = split_key == local.environment_split_type.plan ? ["ci-template.yaml", "cd-template.yaml"] : ["cd-template.yaml"]
     }
   ]]) : environment_split.composite_key => environment_split }
 }

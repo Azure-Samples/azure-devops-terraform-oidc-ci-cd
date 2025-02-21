@@ -9,7 +9,7 @@ stages:
 %{ for environment in environments ~}
   - stage: ${environment.name}_plan
     displayName: ${environment.display_name} Plan
-    ${environment.dependent_environment == "" ? "" : "dependsOn: ${environment.dependent_environment}_plan"}
+    ${environment.dependent_environment == "" ? "" : "dependsOn: ${environment.dependent_environment}_apply"}
     variables:
       - group: ${environment.variable_group_name}
     jobs:
@@ -60,7 +60,7 @@ stages:
                   displayName: Publish Module Artifact
                   inputs:
                     targetPath: '$(Build.ArtifactsStagingDirectory)'
-                    artifact: 'module'
+                    artifact: 'module_${environment.environment_name}'
                     publishLocation: 'pipeline'
                 - pwsh: |
                     terraform `
@@ -89,7 +89,7 @@ stages:
                   displayName: Download Module Artifact
                   inputs:
                     buildType: 'current'
-                    artifactName: 'module'
+                    artifactName: 'module_${environment.environment_name}'
                     targetPath: '$(Build.SourcesDirectory)'
                 - template: helpers/terraform-installer.yaml
                   parameters:

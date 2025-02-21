@@ -44,10 +44,13 @@ resource "azuredevops_check_required_template" "alz" {
   target_resource_id   = azuredevops_serviceendpoint_azurerm.this[each.key].id
   target_resource_type = "endpoint"
 
-  required_template {
-    repository_type = "azuregit"
-    repository_name = "${var.azure_devops_project}/${azuredevops_git_repository.template.name}"
-    repository_ref  = local.default_branch
-    template_path   = each.value.required_template
+  dynamic "required_template" {
+    for_each = { for template in each.value.required_templates : template => template }
+    content {
+      repository_type = "azuregit"
+      repository_name = "${var.azure_devops_project}/${azuredevops_git_repository.template.name}"
+      repository_ref  = local.default_branch
+      template_path   = required_template.value
+    }
   }
 }
