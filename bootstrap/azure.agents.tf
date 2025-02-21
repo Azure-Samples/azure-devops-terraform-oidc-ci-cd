@@ -1,6 +1,6 @@
 module "azure_devops_agents" {
   source  = "Azure/avm-ptn-cicd-agents-and-runners/azurerm"
-  version = "0.3.0"
+  version = "0.3.1"
 
   count = var.use_self_hosted_agents ? 1 : 0
 

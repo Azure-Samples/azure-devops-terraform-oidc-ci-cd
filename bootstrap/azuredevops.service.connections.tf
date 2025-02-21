@@ -1,7 +1,7 @@
 resource "azuredevops_serviceendpoint_azurerm" "this" {
   for_each                               = local.environment_split
   project_id                             = local.azure_devops_project_id
-  service_endpoint_name                  = "service_connection_${each.key}"
+  service_endpoint_name                  = "service-connection-${each.key}"
   description                            = "Managed by Terraform"
   service_endpoint_authentication_scheme = "WorkloadIdentityFederation"
   credentials {
