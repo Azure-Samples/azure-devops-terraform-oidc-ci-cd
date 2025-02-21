@@ -2,11 +2,11 @@ locals {
   pipelines = {
     ci = {
       name      = "01 - Conitnuous Integration"
-      file_path = "ci.yml"
+      file_path = "ci.yaml"
     }
     cd = {
       name      = "02 - Continuous Delivery"
-      file_path = "cd.yml"
+      file_path = "cd.yaml"
     }
   }
   pipelines_by_environment = { for environment_split in flatten([for env_key, env_value in var.environments : [

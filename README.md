@@ -90,7 +90,7 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 
 1. Clone this repository to your local machine.
 1. Open the repo in Visual Studio Code. (Hint: In a terminal you can open Visual Studio Code by navigating to the folder and running `code .`).
-1. Navigate to the `terraform-oidc-config` folder and create a new file called `terraform.tfvars`.
+1. Navigate to the `bootstrap` folder and create a new file called `terraform.tfvars`.
 1. In the `terraform.tfvars` file add the following:
 
     ```terraform
@@ -107,10 +107,18 @@ The instructions for this sample are in the form of a Lab. Follow along with the
     azure_devops_project      = "my-project"
     ```
 
-    > NOTE if you wish to use Microsoft-hosted agents and public networking add this setting to `terraform.tfvars`:
+    If you wish to use Microsoft-hosted agents and public networking add this setting to `terraform.tfvars`:
 
     ```terraform
     use_self_hosted_agents = false
+    ```
+
+    If you wish to use Container Apps (scale to zero) add this setting to `terraform.tfvars`:
+
+    >NOTE: Container App takes longer to provision than Container Instances.
+
+    ```terraform
+    self_hosted_agent_type = "azure_container_app"
     ```
 
 ### Apply the Terraform
@@ -118,6 +126,7 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 1. Open the Visual Studio Code Terminal and navigate the `terraform-oidc-config` folder.
 1. Run `az login` and follow the prompts to login to Azure with your Global Administrator account.
 1. Run `az account show`. If you are not connected to you test subscription, change it by running `az account set --subscription "<subscription-id>"`
+1. Run `$env:ARM_SUBSCRIPTION_ID = $(az account show --query id -o tsv)` to set the subscription id required by azurerm provider v4.
 1. Run `terraform init`.
 1. Run `terraform apply`.
 1. You'll be prompted for the variable `var.azure_devops_token`. Paste in the PAT you generated earlier and hit enter.
@@ -134,24 +143,15 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 
 When deploying the example you will have selected to use the default Managed Identity approach or the Service Principal approach choose the relevant option below.
 
-##### Option 1 and 3 Only: Managed Identity
+##### Managed Identity
 
 1. Login to the [Azure Portal](https://portal.azure.com) with your Global Administrator account.
 1. Navigate to your Subscription and select `Resource groups`.
 1. Click the resource group post-fixed `identity` (e.g. `JFH-20221208-identity`).
 1. Look for a `Managed Identity` resource post-fixed with `dev` and click it.
 
-#### Option 2 Only: Federated Credentials
+#### Federated Credentials
 1. Click on `Federated Credentials`.
-1. There should only be one credential in the list, select that and take a look at the configuration.
-1. Examine the `Subject identifier` and ensure you understand how it is built up.
-
-##### Option 2 Only: Service Principal
-
-1. Login to the [Azure Portal](https://portal.azure.com) with your Global Administrator account.
-1. Navigate to `Azure Active Directory` and select `App registrations`.
-1. Select `All applications`, then find the one you just created post-fixed with `dev` (e.g. `JFH-20221208-dev`).
-1. Select `Certificate & secrets`, then `Federated credentials`.
 1. There should only be one credential in the list, select that and take a look at the configuration.
 1. Examine the `Subject identifier` and ensure you understand how it is built up.
 
@@ -159,9 +159,10 @@ When deploying the example you will have selected to use the default Managed Ide
 
 1. Navigate to your Subscription and select `Resource groups`.
 1. You should see four newly created resource groups.
-1. Click the resource group post-fixed `dev` (e.g. `JFH-20221208-dev`).
+1. Click the resource group post-fixed `dev` (e.g. `rg-JFH-20221208-env-dev`).
 1. Select `Access control (IAM)` and select `Role assignments`.
-1. Under the `Contributor` role, you should see that your `dev` Service Principal or Managed Identity has been granted access directly to the resource group.
+1. Under the `Reader` role, you should see that your `dev-plan` Managed Identity has been granted access directly to the resource group.
+1. Under the `Contributor` role, you should see that your `dev-apply` Managed Identity has been granted access directly to the resource group.
 
 #### State storage account
 
@@ -171,13 +172,13 @@ When deploying the example you will have selected to use the default Managed Ide
 1. Select `Containers`. You should see a `dev`, `test` and `prod` container.
 1. Select the `dev` container.
 1. Click `Access Control (IAM)` and select `Role assignments`.
-1. Scroll down to `Storage Blob Data Owner`. You should see your `dev` Service Principal or Managed Identity has been assigned that role.
+1. Scroll down to `Storage Blob Data Owner`. You should see your `dev-plan` and `dev-apply` Managed Identities have been assigned that role.
 
 #### Azure DevOps Repository
 
 1. Open Azure DevOps in your browser (login if you need to).
 1. Navigate to your organisation and project.
-1. Click `Repos`, then select your new repo in the drop down at the top of the page (e.g. `JFH-20221208-wild-dog`). Click on it.
+1. Click `Repos`, then select your new repo in the drop down at the top of the page (e.g. `JFH-20221208-demo`). Click on it.
 1. You should see some files under source control.
 
 #### Azure DevOps Environments

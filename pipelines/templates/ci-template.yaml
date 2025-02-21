@@ -34,7 +34,7 @@ stages:
             displayName: Terraform Validate
 
 %{ for environment in environments ~}
-      - deployment: ${environment.name}-plan
+      - deployment: ${environment.name}_plan
         variables:
           - group: ${environment.variable_group_name}
         dependsOn: validate

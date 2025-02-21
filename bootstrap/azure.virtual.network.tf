@@ -9,7 +9,7 @@ locals {
   cidr_subnets                  = cidrsubnets(local.virtual_network_address_space, local.subnet_new_bits...)
   subnets                       = { for key, value in local.order_by_size : split("||", key)[1] => local.cidr_subnets[index(local.subnet_keys, key)] }
 
-  subnet_delegation_type        = var.self_hosted_agent_type == "azure_container_app" ? "Microsoft.App/environments" : "Microsoft.ContainerInstance/containerGroups"
+  subnet_delegation_type = var.self_hosted_agent_type == "azure_container_app" ? "Microsoft.App/environments" : "Microsoft.ContainerInstance/containerGroups"
   subnet_delegations = { for key, value in var.subnets_and_sizes : key => key == "agents" ? [
     {
       name = local.subnet_delegation_type

@@ -7,7 +7,7 @@ parameters:
 
 stages:
 %{ for environment in environments ~}
-  - stage: ${environment.name}-plan
+  - stage: ${environment.name}_plan
     displayName: ${environment.display_name} Plan
     variables:
       - group: ${environment.variable_group_name}
@@ -67,7 +67,7 @@ stages:
                     show `
                     tfplan
                   displayName: Show the Plan for Review
-  - stage: ${environment.name}-apply
+  - stage: ${environment.name}_apply
     displayName: ${environment.display_name} Apply
     dependsOn: ${environment.name}-plan
     variables:

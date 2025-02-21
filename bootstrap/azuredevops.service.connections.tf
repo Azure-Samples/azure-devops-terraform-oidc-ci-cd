@@ -47,7 +47,7 @@ resource "azuredevops_check_required_template" "alz" {
   required_template {
     repository_type = "azuregit"
     repository_name = "${var.azure_devops_project}/${azuredevops_git_repository.template.name}"
-    repository_ref  = "refs/heads/main"
+    repository_ref  = local.default_branch
     template_path   = each.value.required_template
   }
 }
