@@ -14,7 +14,7 @@ stages:
     jobs:
       - deployment: plan
         displayName: Plan with Terraform
-        ${environment.dependent_environment == "" ? "" : "dependsOn: ${environment.dependent_environment}-plan"}
+        ${environment.dependent_environment == "" ? "" : "dependsOn: ${environment.dependent_environment}_plan"}
         pool:
           ${environment.agent_pool_configuration}
         environment: ${environment.environment_name}
@@ -69,7 +69,7 @@ stages:
                   displayName: Show the Plan for Review
   - stage: ${environment.name}_apply
     displayName: ${environment.display_name} Apply
-    dependsOn: ${environment.name}-plan
+    dependsOn: ${environment.name}_plan
     variables:
       - group: ${environment.variable_group_name}
     jobs:

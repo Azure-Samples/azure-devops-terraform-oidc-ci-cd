@@ -51,8 +51,8 @@ locals {
       display_name                  = environment_value.display_name
       variable_group_name           = environment_key
       agent_pool_configuration      = var.use_self_hosted_agents ? "name: ${azuredevops_agent_pool.this[0].name}" : "vmImage: ubuntu-latest"
-      service_connection_name_plan  = "service_connection_${environment_key}-plan"
-      service_connection_name_apply = "service_connection_${environment_key}-apply"
+      service_connection_name_plan  = "service-connection-${environment_key}-plan"
+      service_connection_name_apply = "service-connection-${environment_key}-apply"
       environment_name              = environment_key
       dependent_environment         = environment_value.dependent_environment
     } }
