@@ -9,12 +9,12 @@ stages:
 %{ for environment in environments ~}
   - stage: ${environment.name}_plan
     displayName: ${environment.display_name} Plan
+    ${environment.dependent_environment == "" ? "" : "dependsOn: ${environment.dependent_environment}_plan"}
     variables:
       - group: ${environment.variable_group_name}
     jobs:
       - deployment: plan
         displayName: Plan with Terraform
-        ${environment.dependent_environment == "" ? "" : "dependsOn: ${environment.dependent_environment}_plan"}
         pool:
           ${environment.agent_pool_configuration}
         environment: ${environment.environment_name}
@@ -40,6 +40,7 @@ stages:
                     terraform_action: $${{ parameters.terraform_action }}
                     serviceConnection: '${environment.service_connection_name_plan}'
                     root_module_folder_relative_path: $${{ parameters.root_module_folder_relative_path }}
+                    additionalVariables: $(ADDITIONAL_ENVIRONMENT_VARIABLES)
                 - task: CopyFiles@2
                   displayName: Create Module Artifact
                   inputs:

@@ -5,6 +5,8 @@ parameters:
   - name: serviceConnection
   - name: root_module_folder_relative_path
     default: '.'
+  - name: additionalVariables
+    default: '{}'
 
 steps:
   - task: AzureCLI@2
@@ -15,6 +17,14 @@ steps:
       scriptLocation: inlineScript
       addSpnToEnvironment: true
       inlineScript: |
+        $additionalVariables = ConvertFrom-Json '$${{ parameters.additionalVariables }}'
+        foreach($var in $additionalVariables.PSObject.Properties) {
+          if($var.Name.StartsWith("TF_VAR_")) {
+            Write-Host "Setting: $($var.Name) = $($var.Value)"
+            [System.Environment]::SetEnvironmentVariable($var.Name, $var.Value)
+          }
+        }
+
         # Get settings from service connection
         az account show 2>$null | ConvertFrom-Json | Set-Variable account
         $clientId = $account.user.name

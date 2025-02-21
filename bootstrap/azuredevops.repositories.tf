@@ -46,7 +46,7 @@ locals {
   main_repository_files = merge(local.files, local.pipeline_main_files)
 
   pipeline_template_replacements = {
-    environments = { for environment_key, environment_value in var.environments : environment_key => {
+    environments = { for environment_key, environment_value in var.environments : "${format("%03s", environment_value.display_order)}-${environment_key}" => {
       name                          = lower(replace(environment_key, "-", ""))
       display_name                  = environment_value.display_name
       variable_group_name           = environment_key

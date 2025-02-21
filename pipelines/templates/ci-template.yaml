@@ -63,4 +63,5 @@ stages:
                   parameters:
                     serviceConnection: '${environment.service_connection_name_plan}'
                     root_module_folder_relative_path: $${{ parameters.root_module_folder_relative_path }}
+                    additionalVariables: $(ADDITIONAL_ENVIRONMENT_VARIABLES)
 %{ endfor ~}

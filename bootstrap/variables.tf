@@ -46,19 +46,23 @@ variable "self_hosted_agent_type" {
 
 variable "environments" {
   type = map(object({
+    display_order         = number
     display_name          = string
     has_approval          = optional(bool, false)
     dependent_environment = optional(string, "")
   }))
   default = {
     dev = {
-      display_name = "Development"
+      display_order = 1
+      display_name  = "Development"
     }
     test = {
+      display_order         = 2
       display_name          = "Test"
       dependent_environment = "dev"
     }
     prod = {
+      display_order         = 3
       display_name          = "Production"
       has_approval          = true
       dependent_environment = "test"
