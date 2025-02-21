@@ -1,34 +1,34 @@
 locals {
   pipelines = {
     ci = {
-      name = "01 - Conitnuous Integration"
+      name      = "01 - Conitnuous Integration"
       file_path = "ci.yml"
     }
     cd = {
-      name = "02 - Continuous Delivery"
+      name      = "02 - Continuous Delivery"
       file_path = "cd.yml"
     }
   }
   pipelines_by_environment = { for environment_split in flatten([for env_key, env_value in var.environments : [
     for pipeline_key, pipeline_value in local.pipelines : {
-      composite_key     = "${env_key}-${pipeline_key}"
-      environment       = env_key
-      pipeline          = pipeline_key
+      composite_key = "${env_key}-${pipeline_key}"
+      environment   = env_key
+      pipeline      = pipeline_key
     }
   ]]) : environment_split.composite_key => environment_split }
 
-  pipelines_by_service_connection = { for environment_split in flatten([for env_key, env_value in local.environment_split: [
+  pipelines_by_service_connection = { for environment_split in flatten([for env_key, env_value in local.environment_split : [
     for pipeline_key, pipeline_value in local.pipelines : {
-      composite_key     = "${env_key}-${pipeline_key}"
+      composite_key      = "${env_key}-${pipeline_key}"
       service_connection = env_key
-      pipeline          = pipeline_key
-      is_valid = env_value.type == "plan" || env_value.type == "apply" && pipeline_key == "cd"
+      pipeline           = pipeline_key
+      is_valid           = env_value.type == "plan" || env_value.type == "apply" && pipeline_key == "cd"
     }
-  ]]) : environment_split.composite_key => environment_split if environment_split.is_valid } 
+  ]]) : environment_split.composite_key => environment_split if environment_split.is_valid }
 }
 
 resource "azuredevops_build_definition" "this" {
-  for_each = local.pipelines
+  for_each   = local.pipelines
   project_id = local.azure_devops_project_id
   name       = each.value.name
 

@@ -17,13 +17,13 @@ resource "azuredevops_git_repository" "template" {
 }
 
 locals {
-  template_folder = "${path.module}../example-module"
+  template_folder = "${path.module}/../example-module"
   files = { for file in fileset(local.template_folder, "**") : file => {
     name    = file
     content = file("${local.template_folder}/${file}")
   } }
 
-  pipeline_main_folder = "${path.module}../pipelines/main"
+  pipeline_main_folder = "${path.module}/../pipelines/main"
   pipeline_files = { for file in fileset(local.pipeline_main_folder, "**") : file => {
     name    = file
     content = file("${local.pipeline_main_folder}/${file}")
@@ -43,7 +43,7 @@ locals {
     } }
   }
 
-  pipeline_template_folder = "${path.module}../pipelines/templates"
+  pipeline_template_folder = "${path.module}/../pipelines/templates"
   pipeline_template_files = { for file in fileset(local.pipeline_template_folder, "**") : file => {
     name    = file
     content = templatefile("${local.pipeline_template_folder}/${file}", local.template_replacements)

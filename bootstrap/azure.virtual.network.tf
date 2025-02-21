@@ -1,3 +1,5 @@
+
+
 module "virtual_network" {
   source              = "Azure/avm-res-network-virtualnetwork/azurerm"
   version             = "0.8.1"
@@ -9,5 +11,6 @@ module "virtual_network" {
   subnets = { for subnet_key, subnet_address_space in local.subnets : subnet_key => {
     name             = subnet_key
     address_prefixes = [subnet_address_space]
+    delegation       = local.subnet_delegations[subnet_key]
   } }
 }

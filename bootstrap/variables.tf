@@ -67,7 +67,8 @@ variable "subnets_and_sizes" {
   type        = map(number)
   description = "The size of the subnets"
   default = {
-    agents = 26
+    agents            = 27
+    private_endpoints = 29
   }
 }
 
