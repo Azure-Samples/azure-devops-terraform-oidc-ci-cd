@@ -32,4 +32,4 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-terraform-oidc-config/.terraform.lock.hcl
+bootstrap/.terraform.lock.hcl
