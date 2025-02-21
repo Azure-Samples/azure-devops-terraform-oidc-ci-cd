@@ -7,9 +7,9 @@ resource "azuredevops_variable_group" "this" {
   allow_access = true
 
   variable {
-    name  = "ADDITIONAL_ENVIRONMENT_VARIABLES"
+    name = "ADDITIONAL_ENVIRONMENT_VARIABLES"
     value = jsonencode({
-       TF_VAR_resource_group_name = module.resource_group_environments[each.key].name
+      TF_VAR_resource_group_name = module.resource_group_environments[each.key].name
     })
   }
 
