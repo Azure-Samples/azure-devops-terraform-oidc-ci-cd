@@ -7,7 +7,7 @@ resource "azuredevops_variable_group" "this" {
   allow_access = true
 
   variable {
-    name  = "AZURE_RESOURCE_GROUP_NAME"
+    name  = "TF_VAR_resource_group_name"
     value = module.resource_group_environments[each.key].name
   }
 

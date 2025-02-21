@@ -9,6 +9,7 @@ module "azure_devops_agents" {
   postfix                                       = lower(replace(var.postfix, "-", ""))
   location                                      = var.location
   compute_types                                 = [var.self_hosted_agent_type]
+  container_instance_count                      = 4
   version_control_system_type                   = "azuredevops"
   version_control_system_personal_access_token  = var.azure_devops_token
   version_control_system_organization           = local.azure_devops_organization_url
