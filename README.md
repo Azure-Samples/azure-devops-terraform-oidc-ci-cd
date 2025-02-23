@@ -74,6 +74,7 @@ The boostrap implements a number of best practices for Terraform in Azure DevOps
 - Approvals: The production environment requires approval to apply to it. This is enforeced on the prod-apply service connection. This is not configured on the environment by design to ensure that the approval is to use the identity and cannot be bypassed.
 - Environment locks: The environments are locked with an exclusive to prevent parralel deployments from running at the same time. The pipeline includes the `lockBehavior: sequential` setting to ensure that the pipeline will wait for the lock to be released before running, so it queues rather just failing.
 - Workload Identity Federation (OIDC): The service connections and User Assigned Managed Identities are configured to use Workload Identity Federation (OIDC)authenticate to Azure. This means that you don't need to store any secrets in Azure DevOps.
+- Pipeline Stages: By default the pipeline is configured with dependencies between the environments. This means that the pipeline will run the dev stage, then the test stage and finally the prod stage. We also provide a parameter to target a specific environment to demonstrate a GitOps type approach too.
 
 ### Generate a PAT (Personal Access Token) in Azure DevOps
 
