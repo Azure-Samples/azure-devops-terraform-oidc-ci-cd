@@ -34,7 +34,7 @@ locals {
     dependent_environment         = environment_value.dependent_environment
   } }
 
-  template_folder = "${path.module}/../example-module"
+  template_folder = "${path.module}/${var.example_module_path}"
   files = { for file in fileset(local.template_folder, "**") : file => {
     name    = file
     content = file("${local.template_folder}/${file}")

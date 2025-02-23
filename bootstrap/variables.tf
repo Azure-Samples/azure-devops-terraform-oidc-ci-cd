@@ -89,3 +89,8 @@ variable "approvers" {
   type    = map(string)
   default = {}
 }
+
+variable "example_module_path" {
+  type    = string
+  default = "../example-module"
+}
