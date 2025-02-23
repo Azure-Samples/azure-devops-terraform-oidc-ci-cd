@@ -22,9 +22,3 @@ locals {
     }
   ]]) : environment_split.composite_key => environment_split }
 }
-
-locals {
-  my_ip_address_split = split(".", data.http.ip.response_body)
-  my_cidr_slash_24    = "${join(".", slice(local.my_ip_address_split, 0, 3))}.0/24" # We are using a wider CIDR range for demo purposes as many users may not have a static IP, but very likely an address in the same /24
-}
-

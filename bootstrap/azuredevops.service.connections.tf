@@ -30,7 +30,7 @@ resource "azuredevops_check_approval" "this" {
   timeout = 43200
 }
 
-resource "azuredevops_check_exclusive_lock" "alz" {
+resource "azuredevops_check_exclusive_lock" "service_connection" {
   for_each             = local.environment_split
   project_id           = local.azure_devops_project_id
   target_resource_id   = azuredevops_serviceendpoint_azurerm.this[each.key].id
@@ -38,7 +38,7 @@ resource "azuredevops_check_exclusive_lock" "alz" {
   timeout              = 43200
 }
 
-resource "azuredevops_check_required_template" "alz" {
+resource "azuredevops_check_required_template" "this" {
   for_each             = local.environment_split
   project_id           = local.azure_devops_project_id
   target_resource_id   = azuredevops_serviceendpoint_azurerm.this[each.key].id

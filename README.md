@@ -131,7 +131,7 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 
 #### Identities
 
-##### USer Assigned Managed Identity
+##### User Assigned Managed Identity
 
 1. Login to the [Azure Portal](https://portal.azure.com) with your Global Administrator account.
 1. Navigate to your Subscription and select `Resource groups`.
@@ -181,6 +181,7 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 1. Hover over `Pipelines`, then select `Environments`.
 1. You should see 3 environments called `dev`, `test` and `prod`.
 1. Click on the `dev` environment and take a look at the settings.
+1. Note the exclusive lock on the environment, this stops parralel deployments from planning at the same time as another plan and apply.
 
 #### Azure DevOps Variable Group
 
@@ -194,6 +195,7 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 1. Click `Service connections` under the `Pipelines` section.
 1. There should be 3 service connections configured for Managed Identity or Workload Identity Federation depending on the option you choose.
 1. Click on one of the service connections and click `Edit` to look at the settings.
+1. Look at the approvals and required template check. The required template check will ensure that the pipeline is using the template specified in the template repository.
 
 #### Azure DevOps Agent Pools (self hosted agents option only)
 
