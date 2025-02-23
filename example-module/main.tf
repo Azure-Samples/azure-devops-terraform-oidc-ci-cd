@@ -22,8 +22,8 @@ resource "azurerm_network_interface" "example" {
   resource_group_name = data.azurerm_resource_group.example.name
 
   ip_configuration {
-    name = "internal"
-    subnet_id = azurerm_subnet.example.id
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.example.id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -49,7 +49,7 @@ resource "azurerm_linux_virtual_machine" "example" {
   }
 
   os_disk {
-    caching              = "ReadWrite"
+    caching = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
 

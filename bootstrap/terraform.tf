@@ -2,21 +2,17 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.107"
-    }
-    azuread = {
-      source  = "hashicorp/azuread"
-      version = "~> 2.30"
+      version = "~> 4.20"
     }
     azuredevops = {
       source  = "microsoft/azuredevops"
-      version = ">=0.9.0"
+      version = "~> 1.7"
     }
   }
 }
 
 provider "azuredevops" {
-  org_service_url       = "${var.azure_devops_organisation_prefix}/${var.azure_devops_organisation_target}"
+  org_service_url       = local.azure_devops_organization_url
   personal_access_token = var.azure_devops_token
 }
 
@@ -25,9 +21,9 @@ provider "azurerm" {
     resource_group {
       prevent_deletion_if_contains_resources = false
     }
+    storage {
+      data_plane_available = false
+    }
   }
   storage_use_azuread = true
-}
-
-provider "azuread" {
 }

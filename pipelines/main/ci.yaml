@@ -1,0 +1,16 @@
+---
+trigger:
+  - none
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: ${project_name}/${repository_name_templates}
+
+lockBehavior: sequential
+
+extends:
+  template: ${ci_template_path}@templates
+  parameters:
+    root_module_folder_relative_path: ${root_module_folder_relative_path}
