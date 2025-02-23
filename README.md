@@ -91,8 +91,10 @@ The boostrap implements a number of best practices for Terraform in Azure DevOps
    1. `Build`: `Read & execute`
    1. `Code`: `Full`
    1. `Environment`: `Read & manage`
-   1. `Service Connections`: `Read, query, & manage`
+   1. `Graph`: `Read & manage`
+   1. `Pipeline Resources`: `Use & manage`
    1. `Project and Team`: `Read, write, & manage`
+   1. `Service Connections`: `Read, query, & manage`
    1. `Variable Groups`: `Read, create, & manage`
 1. Click `Create`
 1. > IMPORTANT: Copy the token and save it somewhere.
