@@ -270,7 +270,9 @@ The boostrap implements a number of best practices for Terraform in Azure DevOps
 
 ### Clean up
 
-1. Run `terraform destroy` in the `bootstrap` folder to clean up the resources created by the bolabotstrap.
+1. Run `terraform destroy` in the `bootstrap` folder to clean up the resources created by the bootstrap.
+
+>NOTE: The destroy may fail the first time due to dependency between service connections and federated credentials. If this happens, run `terraform destroy` again and it should succeed.
 
 ## Resources
 
