@@ -2,6 +2,8 @@
 parameters:
   - name: terraform_action
     default: 'apply'
+  - name: environment
+    default: All
   - name: root_module_folder_relative_path
     default: '.'
 
@@ -10,6 +12,7 @@ stages:
   - stage: ${environment.name}_plan
     displayName: ${environment.display_name} Plan
     ${environment.dependent_environment == "" ? "" : "dependsOn: ${environment.dependent_environment}_apply"}
+    condition: and(not(or(failed(), canceled())), or(eq('$${{ parameters.environment }}', 'All'), eq('$${{ parameters.environment }}', '${environment.name}')))
     variables:
       - group: ${environment.variable_group_name}
     jobs:
@@ -71,6 +74,7 @@ stages:
   - stage: ${environment.name}_apply
     displayName: ${environment.display_name} Apply
     dependsOn: ${environment.name}_plan
+    condition: and(not(or(failed(), canceled())), or(eq('$${{ parameters.environment }}', 'All'), eq('$${{ parameters.environment }}', '${environment.name}')))
     variables:
       - group: ${environment.variable_group_name}
     jobs:

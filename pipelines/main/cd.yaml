@@ -11,6 +11,15 @@ resources:
       name: ${project_name}/${repository_name_templates}
 
 parameters:
+  - name: environment
+    displayName: 'Choose Environment'
+    type: string
+    default: All
+    values:
+      - All
+%{ for environment in environments ~}
+      - ${environment.name}
+%{ endfor ~}
   - name: terraform_action
     displayName: Terraform Action to perform
     type: string
@@ -26,3 +35,4 @@ extends:
   parameters:
     terraform_action: $${{ parameters.terraform_action }}
     root_module_folder_relative_path: ${root_module_folder_relative_path}
+    environment: $${{ parameters.environment }}

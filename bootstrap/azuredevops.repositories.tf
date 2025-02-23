@@ -23,6 +23,17 @@ resource "azuredevops_git_repository" "template" {
 }
 
 locals {
+  environment_replacements = { for environment_key, environment_value in var.environments : "${format("%03s", environment_value.display_order)}-${environment_key}" => {
+    name                          = lower(replace(environment_key, "-", ""))
+    display_name                  = environment_value.display_name
+    variable_group_name           = environment_key
+    agent_pool_configuration      = var.use_self_hosted_agents ? "name: ${azuredevops_agent_pool.this[0].name}" : "vmImage: ubuntu-latest"
+    service_connection_name_plan  = "service-connection-${environment_key}-plan"
+    service_connection_name_apply = "service-connection-${environment_key}-apply"
+    environment_name              = environment_key
+    dependent_environment         = environment_value.dependent_environment
+  } }
+
   template_folder = "${path.module}/../example-module"
   files = { for file in fileset(local.template_folder, "**") : file => {
     name    = file
@@ -30,6 +41,7 @@ locals {
   } }
 
   pipeline_main_replacements = {
+    environments                     = local.environment_replacements
     project_name                     = var.azure_devops_project
     repository_name_templates        = azuredevops_git_repository.template.name
     cd_template_path                 = "cd-template.yaml"
@@ -46,16 +58,7 @@ locals {
   main_repository_files = merge(local.files, local.pipeline_main_files)
 
   pipeline_template_replacements = {
-    environments = { for environment_key, environment_value in var.environments : "${format("%03s", environment_value.display_order)}-${environment_key}" => {
-      name                          = lower(replace(environment_key, "-", ""))
-      display_name                  = environment_value.display_name
-      variable_group_name           = environment_key
-      agent_pool_configuration      = var.use_self_hosted_agents ? "name: ${azuredevops_agent_pool.this[0].name}" : "vmImage: ubuntu-latest"
-      service_connection_name_plan  = "service-connection-${environment_key}-plan"
-      service_connection_name_apply = "service-connection-${environment_key}-apply"
-      environment_name              = environment_key
-      dependent_environment         = environment_value.dependent_environment
-    } }
+    environments = local.environment_replacements
   }
 
   pipeline_template_folder = "${path.module}/../pipelines/templates"
