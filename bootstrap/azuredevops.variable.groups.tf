@@ -1,4 +1,3 @@
-
 resource "azuredevops_variable_group" "this" {
   for_each     = var.environments
   project_id   = local.azure_devops_project_id
