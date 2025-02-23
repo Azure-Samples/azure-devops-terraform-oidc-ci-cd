@@ -58,6 +58,23 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 
 ## Demo / Lab
 
+### Lab overview
+
+This lab has the following phases:
+
+1. Bootstrap Azure and Azure DevOps for Terraform CI / CD.
+1. Run the Continuous Delivery pipeline for Terraform.
+1. Make a change and submit a Pull Request and see the CI pipeline run.
+
+### Bootstrap Overview and Best Practices
+
+The boostrap implements a number of best practices for Terraform in Azure DevOps that you should take note of as you run through the lab:
+
+- Governed pipelines: The pipelines are stored in a separate repository to the code they deploy. This allows you to govern the pipelines and ensure that only approved templates are used. This is enforced by the required template setting on the service connections.
+- Approvals: The production environment requires approval to apply to it. This is enforeced on the prod-apply service connection. This is not configured on the environment by design to ensure that the approval is to use the identity and cannot be bypassed.
+- Environment locks: The environments are locked with an exclusive to prevent parralel deployments from running at the same time. The pipeline includes the `lockBehavior: sequential` setting to ensure that the pipeline will wait for the lock to be released before running, so it queues rather just failing.
+- Workload Identity Federation (OIDC): The service connections and User Assigned Managed Identities are configured to use Workload Identity Federation (OIDC)authenticate to Azure. This means that you don't need to store any secrets in Azure DevOps.
+
 ### Generate a PAT (Personal Access Token) in Azure DevOps
 
 1. Navigate to [dev.azure.com](https://dev.azure.com).
@@ -129,9 +146,7 @@ The instructions for this sample are in the form of a Lab. Follow along with the
 
 ### Check what has been created
 
-#### Identities
-
-##### User Assigned Managed Identity
+#### User Assigned Managed Identity
 
 1. Login to the [Azure Portal](https://portal.azure.com) with your Global Administrator account.
 1. Navigate to your Subscription and select `Resource groups`.
