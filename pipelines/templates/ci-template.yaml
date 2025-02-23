@@ -85,6 +85,6 @@ stages:
                   displayName: Publish Plan Artifact
                   inputs:
                     targetPath: 'tfplan.json'
-                    artifact: 'plan_${environment.environment_name}'
+                    artifact: 'plan_${environment.name}'
                     publishLocation: 'pipeline'
 %{ endfor ~}

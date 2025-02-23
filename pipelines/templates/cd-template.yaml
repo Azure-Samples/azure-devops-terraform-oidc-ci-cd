@@ -63,7 +63,7 @@ stages:
                   displayName: Publish Module Artifact
                   inputs:
                     targetPath: '$(Build.ArtifactsStagingDirectory)'
-                    artifact: 'module_${environment.environment_name}'
+                    artifact: 'module_${environment.name}'
                     publishLocation: 'pipeline'
                 - pwsh: |
                     terraform `
@@ -93,7 +93,7 @@ stages:
                   displayName: Download Module Artifact
                   inputs:
                     buildType: 'current'
-                    artifactName: 'module_${environment.environment_name}'
+                    artifactName: 'module_${environment.name}'
                     targetPath: '$(Build.SourcesDirectory)'
                 - template: helpers/terraform-installer.yaml
                   parameters:
