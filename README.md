@@ -268,6 +268,10 @@ The boostrap implements a number of best practices for Terraform in Azure DevOps
 1. Merge the Pull Request.
 1. Navigate to `Pipelines` and watch the run.
 
+### Clean up
+
+1. Run `terraform destroy` in the `bootstrap` folder to clean up the resources created by the bolabotstrap.
+
 ## Resources
 
 - [Terraform Steps for Azure DevOps](https://github.com/microsoft/azure-pipelines-terraform/blob/main/Tasks/TerraformTask/TerraformTaskV4/README.md)
