@@ -1,6 +1,6 @@
 locals {
-  default_audience_name         = "api://AzureADTokenExchange"
-  azure_devops_organization_url = "${var.azure_devops_organization_prefix}/${var.azure_devops_organization}"
+  default_audience_name = "api://AzureADTokenExchange"
+  organization_name_url = "${var.organization_name_prefix}/${var.organization_name}"
 }
 
 locals {
@@ -21,4 +21,9 @@ locals {
       required_templates = split_key == local.environment_split_type.plan ? ["ci-template.yaml", "cd-template.yaml"] : ["cd-template.yaml"]
     }
   ]]) : environment_split.composite_key => environment_split }
+}
+
+locals {
+  repository_name          = "${var.postfix}-${var.repository_postfix}"
+  repository_name_template = "${var.postfix}-${var.repository_postfix_template}"
 }

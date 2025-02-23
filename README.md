@@ -106,7 +106,7 @@ The boostrap implements a number of best practices for Terraform in Azure DevOps
 
     ```terraform
     postfix                   = "<your_initials>-<date_as_YYYYMMDD>"
-    azure_devops_organization = "<your_azure_devops_organisation_name>"
+    organization_name = "<your_azure_devops_organisation_name>"
     azure_devops_project      = "<your_azure_devops_project_name>"
     approvers                 = ["<your_azure_devops_username>"]  # You can omit this is you don't want to demo approvals on the production environment. Remove this line to omit.
     ```
@@ -115,7 +115,7 @@ The boostrap implements a number of best practices for Terraform in Azure DevOps
 
     ```terraform
     postfix                   = "JFH-20221208"
-    azure_devops_organization = "my-organization"
+    organization_name = "my-organization"
     azure_devops_project      = "my-project"
     approvers                 = ["demouser@example.com"]
     ```
@@ -140,7 +140,7 @@ The boostrap implements a number of best practices for Terraform in Azure DevOps
 1. Run `az login -T "<tenant_id>"` and follow the prompts to login to Azure with your account.
 1. Run `az account show`. If you are not connected to you test subscription, change it by running `az account set --subscription "<subscription-id>"`
 1. Run `$env:ARM_SUBSCRIPTION_ID = $(az account show --query id -o tsv)` to set the subscription id required by azurerm provider v4.
-1. Run `$env:TF_VAR_azure_devops_token = "<your_pat>"` to set the PAT you generated earlier.
+1. Run `$env:TF_VAR_personal_access_token = "<your_pat>"` to set the PAT you generated earlier.
 1. Run `terraform init`.
 1. Run `terraform plan -out tfplan`.
 1. The plan will complete. Review the plan and see what is going to be created.

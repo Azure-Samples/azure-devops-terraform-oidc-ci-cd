@@ -12,8 +12,8 @@ terraform {
 }
 
 provider "azuredevops" {
-  org_service_url       = local.azure_devops_organization_url
-  personal_access_token = var.azure_devops_token
+  org_service_url       = local.organization_name_url
+  personal_access_token = var.personal_access_token
 }
 
 provider "azurerm" {

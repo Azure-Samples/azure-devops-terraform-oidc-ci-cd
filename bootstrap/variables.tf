@@ -7,17 +7,17 @@ variable "location" {
   default = "UK South"
 }
 
-variable "azure_devops_token" {
+variable "personal_access_token" {
   type      = string
   sensitive = true
 }
 
-variable "azure_devops_organization_prefix" {
+variable "organization_name_prefix" {
   type    = string
   default = "https://dev.azure.com"
 }
 
-variable "azure_devops_organization" {
+variable "organization_name" {
   type = string
 }
 
@@ -93,4 +93,14 @@ variable "approvers" {
 variable "example_module_path" {
   type    = string
   default = "../example-module"
+}
+
+variable "repository_postfix" {
+  type    = string
+  default = "demo"
+}
+
+variable "repository_postfix_template" {
+  type    = string
+  default = "demo-template"
 }
