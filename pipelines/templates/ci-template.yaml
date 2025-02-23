@@ -64,4 +64,27 @@ stages:
                     serviceConnection: '${environment.service_connection_name_plan}'
                     root_module_folder_relative_path: $${{ parameters.root_module_folder_relative_path }}
                     additionalVariables: $(ADDITIONAL_ENVIRONMENT_VARIABLES)
+                - pwsh: |
+                    terraform -chdir="$${{ parameters.root_module_folder_relative_path }}" show -json tfplan > tfplan.json
+                    $planJson = Get-Content -Raw tfplan.json
+                    $planObject = ConvertFrom-Json $planJson -Depth 100
+
+                    $items = @{}
+                    foreach($change in $planObject.resource_changes) {
+                      $key = [System.String]::Join("-", $change.change.actions)
+                      if(!$items.ContainsKey($key)) {
+                        $items[$key] = 0
+                      }
+                      $items[$key]++
+                    }
+                    
+                    Write-Host "Plan Summary"
+                    Write-Host (ConvertTo-Json $items -Depth 10)
+                  displayName: Terraform Plan Summary
+                - task: PublishPipelineArtifact@1
+                  displayName: Publish Plan Artifact
+                  inputs:
+                    targetPath: 'tfplan.json'
+                    artifact: 'plan_${environment.environment_name}'
+                    publishLocation: 'pipeline'
 %{ endfor ~}
