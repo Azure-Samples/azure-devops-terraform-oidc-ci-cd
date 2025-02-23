@@ -4,8 +4,8 @@ languages:
 - terraform
 - hcl
 - yaml
-name: Using Azure DevOps Pipelines Workload identity federation (OIDC) or Managed Identity with Azure for Terraform Deployments
-description: A sample showing how to configure Azure DevOps Workload identity federation (OIDC) or Managed Identity connection to Azure with Terraform and then use that configuration to deploy resources with Terraform.
+name: Using Azure DevOps Pipelines Workload identity federation (OIDC) with Azure for Terraform Deployments
+description: A sample showing how to configure Azure DevOps Workload identity federation (OIDC) connection to Azure with Terraform and then use that configuration to deploy resources with Terraform. The sample also demonstrates bootstrapping CI / CD with Terraform and how to implement a number of best practices.
 products:
 - azure
 - azure-devops
@@ -68,6 +68,8 @@ This lab has the following phases:
 
 ### Bootstrap Overview and Best Practices
 
+This demo lab creates and is scoped to resource groups. This is to ensure the lab only requires a single subscription and can be run by anyone without the overhead of creating multiple subscriptions. However, for a production scenario we recommend scoping to subscriptions and using [subscription demoncratization](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-principles#subscription-democratization).
+
 The boostrap implements a number of best practices for Terraform in Azure DevOps that you should take note of as you run through the lab:
 
 - Governed pipelines: The pipelines are stored in a separate repository to the code they deploy. This allows you to govern the pipelines and ensure that only approved templates are used. This is enforced by the required template setting on the service connections.
@@ -75,6 +77,7 @@ The boostrap implements a number of best practices for Terraform in Azure DevOps
 - Environment locks: The environments are locked with an exclusive to prevent parralel deployments from running at the same time. The pipeline includes the `lockBehavior: sequential` setting to ensure that the pipeline will wait for the lock to be released before running, so it queues rather just failing.
 - Workload Identity Federation (OIDC): The service connections and User Assigned Managed Identities are configured to use Workload Identity Federation (OIDC)authenticate to Azure. This means that you don't need to store any secrets in Azure DevOps.
 - Pipeline Stages: By default the pipeline is configured with dependencies between the environments. This means that the pipeline will run the dev stage, then the test stage and finally the prod stage. We also provide a parameter to target a specific environment to demonstrate a GitOps type approach too.
+- Separate Plan and Apply Identities: The bootstrap creates separate plan and apply identities and service connections per environment. This is to implement the principal of least privilege. The plan identity has read only access to the resource group and the apply identity has contributor access to the resource group.
 
 ### Generate a PAT (Personal Access Token) in Azure DevOps
 
