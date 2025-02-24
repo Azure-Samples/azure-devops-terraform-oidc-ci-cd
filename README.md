@@ -111,7 +111,10 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
     postfix              = "<your_initials>-<date_as_YYYYMMDD>"
     organization_name    = "<your_azure_devops_organisation_name>"
     azure_devops_project = "<your_azure_devops_project_name>"
-    approvers            = ["<your_azure_devops_username>"]  # You can omit this is you don't want to demo approvals on the production environment. Remove this line to omit.
+    # You can omit this is you don't want to demo approvals on the production environment. Remove this whole approvers block to omit.
+    approvers            = {
+      user1 = "<your_azure_devops_username>"
+    }  
     ```
 
     e.g.
@@ -120,7 +123,9 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
     postfix              = "JFH-20221208"
     organization_name    = "my-organization"
     azure_devops_project = "my-project"
-    approvers            = ["demouser@example.com"]
+    approvers            = {
+      user1 = "demouser@example.com"
+    }
     ```
 
     If you wish to use Microsoft-hosted agents and public networking add this setting to `terraform.tfvars`:
