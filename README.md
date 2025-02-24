@@ -112,7 +112,7 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
     organization_name    = "<your_azure_devops_organisation_name>"
     azure_devops_project = "<your_azure_devops_project_name>"
     # You can omit this is you don't want to demo approvals on the production environment. Remove this whole approvers block to omit.
-    approvers            = {
+    approvers = {
       user1 = "<your_azure_devops_username>"
     }  
     ```
@@ -123,7 +123,7 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
     postfix              = "JFH-20221208"
     organization_name    = "my-organization"
     azure_devops_project = "my-project"
-    approvers            = {
+    approvers = {
       user1 = "demouser@example.com"
     }
     ```
