@@ -12,7 +12,7 @@ products:
 urlFragment: azure-devops-terraform-oidc-ci-cd
 ---
 
-# Using Azure DevOps Pipelines Workload identity federation (OIDC) or Managed Identity with Azure for Terraform Deployments
+# Using Azure DevOps Pipelines Workload identity federation (OIDC) with Azure for Terraform Deployments
 
 This is a two part sample. The first part demonstrates how to configure Azure and Azure DevOps for credential free deployment with Terraform. The second part demonstrates an end to end Continuous Delivery Pipeline for Terraform.
 
@@ -20,7 +20,7 @@ This is a two part sample. The first part demonstrates how to configure Azure an
 
 | File/folder | Description |
 |-------------|-------------|
-| `bootstrap` | The Terraform to configure Azure and Azure DevOps ready for Workload identity federation (OIDC) or Managed Identity authenticaton. |
+| `bootstrap` | The Terraform to configure Azure and Azure DevOps ready for Workload identity federation (OIDC) or Managed Identity authentication. |
 | `example-module` | Some Terraform with Azure Resources for the demo to deploy. |
 | `pipelines` | The templated Azure DevOps Pipelines for the demo. |
 | `.gitignore` | Define what to ignore at commit time. |
@@ -47,6 +47,7 @@ This sample includes the following features:
 - Azure CLI: [Download](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli#install-or-update)
 - An Azure Subscription: [Free Account](https://azure.microsoft.com/en-gb/free/search/)
 - An Azure DevOps Organization and Project: [Free Organization](https://aex.dev.azure.com/signup/)
+  - A free pipeline or billing is required
 
 ### Installation
 
@@ -70,12 +71,12 @@ This lab has the following phases:
 
 This demo lab creates and is scoped to resource groups. This is to ensure the lab only requires a single subscription and can be run by anyone without the overhead of creating multiple subscriptions. However, for a production scenario we recommend scoping to subscriptions and using [subscription demoncratization](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-principles#subscription-democratization).
 
-The boostrap implements a number of best practices for Terraform in Azure DevOps that you should take note of as you run through the lab:
+The bootstrap implements a number of best practices for Terraform in Azure DevOps that you should take note of as you run through the lab:
 
 - Governed pipelines: The pipelines are stored in a separate repository to the code they deploy. This allows you to govern the pipelines and ensure that only approved templates are used. This is enforced by the required template setting on the service connections.
-- Approvals: The production environment requires approval to apply to it. This is enforeced on the prod-apply service connection. This is not configured on the environment by design to ensure that the approval is to use the identity and cannot be bypassed.
-- Environment locks: The environments are locked with an exclusive to prevent parralel deployments from running at the same time. The pipeline includes the `lockBehavior: sequential` setting to ensure that the pipeline will wait for the lock to be released before running, so it queues rather just failing.
-- Workload Identity Federation (OIDC): The service connections and User Assigned Managed Identities are configured to use Workload Identity Federation (OIDC)authenticate to Azure. This means that you don't need to store any secrets in Azure DevOps.
+- Approvals: The production environment requires approval to apply to it. This is enforced on the prod-apply service connection. This is not configured on the environment by design to ensure that the approval is to use the identity and cannot be bypassed.
+- Environment locks: The environments are locked with an exclusive to prevent parallel deployments from running at the same time. The pipeline includes the `lockBehavior: sequential` setting to ensure that the pipeline will wait for the lock to be released before running, so it queues rather just failing.
+- Workload Identity Federation (OIDC): The service connections and User Assigned Managed Identities are configured to use Workload Identity Federation (OIDC) authenticate to Azure. This means that you don't need to store any secrets in Azure DevOps.
 - Pipeline Stages: By default the pipeline is configured with dependencies between the environments. This means that the pipeline will run the dev stage, then the test stage and finally the prod stage. We also provide a parameter to target a specific environment to demonstrate a GitOps type approach too.
 - Separate Plan and Apply Identities: The bootstrap creates separate plan and apply identities and service connections per environment. This is to implement the principal of least privilege. The plan identity has read only access to the resource group and the apply identity has contributor access to the resource group.
 
@@ -107,19 +108,19 @@ The boostrap implements a number of best practices for Terraform in Azure DevOps
 1. In the `terraform.tfvars` file add the following:
 
     ```terraform
-    postfix                   = "<your_initials>-<date_as_YYYYMMDD>"
-    organization_name = "<your_azure_devops_organisation_name>"
-    azure_devops_project      = "<your_azure_devops_project_name>"
-    approvers                 = ["<your_azure_devops_username>"]  # You can omit this is you don't want to demo approvals on the production environment. Remove this line to omit.
+    postfix              = "<your_initials>-<date_as_YYYYMMDD>"
+    organization_name    = "<your_azure_devops_organisation_name>"
+    azure_devops_project = "<your_azure_devops_project_name>"
+    approvers            = ["<your_azure_devops_username>"]  # You can omit this is you don't want to demo approvals on the production environment. Remove this line to omit.
     ```
 
     e.g.
 
     ```terraform
-    postfix                   = "JFH-20221208"
-    organization_name = "my-organization"
-    azure_devops_project      = "my-project"
-    approvers                 = ["demouser@example.com"]
+    postfix              = "JFH-20221208"
+    organization_name    = "my-organization"
+    azure_devops_project = "my-project"
+    approvers            = ["demouser@example.com"]
     ```
 
     If you wish to use Microsoft-hosted agents and public networking add this setting to `terraform.tfvars`:
