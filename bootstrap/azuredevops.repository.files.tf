@@ -3,7 +3,8 @@ locals {
     name                          = lower(replace(environment_key, "-", ""))
     display_name                  = environment_value.display_name
     variable_group_name           = environment_key
-    agent_pool_configuration      = var.use_self_hosted_agents ? "name: ${azuredevops_agent_pool.this[0].name}" : "vmImage: ubuntu-latest"
+    agent_pool_type               = var.use_self_hosted_agents ? "self-hosted" : "microsoft-hosted"
+    agent_pool_name               = var.use_self_hosted_agents ? "${azuredevops_agent_pool.this[0].name}" : "ubuntu-latest"
     service_connection_name_plan  = "service-connection-${environment_key}-plan"
     service_connection_name_apply = "service-connection-${environment_key}-apply"
     environment_name              = environment_key
@@ -33,14 +34,10 @@ locals {
 
   main_repository_files = merge(local.files, local.pipeline_main_files)
 
-  pipeline_template_replacements = {
-    environments = local.environment_replacements
-  }
-
   pipeline_template_folder = "${path.module}/../pipelines/templates"
   pipeline_template_files = { for file in fileset(local.pipeline_template_folder, "**") : file => {
     name    = file
-    content = templatefile("${local.pipeline_template_folder}/${file}", local.pipeline_template_replacements)
+    content = file("${local.pipeline_template_folder}/${file}")
   } }
 }
 
