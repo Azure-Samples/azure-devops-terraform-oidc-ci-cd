@@ -36,3 +36,15 @@ extends:
     terraform_action: $${{ parameters.terraform_action }}
     root_module_folder_relative_path: ${root_module_folder_relative_path}
     environment: $${{ parameters.environment }}
+    environments: 
+%{ for environment in environments ~}
+      - name: ${environment.name}
+        display_name: ${environment.display_name}
+        service_connection_name_plan: ${environment.service_connection_name_plan}
+        service_connection_name_apply: ${environment.service_connection_name_apply}
+        variable_group_name: ${environment.variable_group_name}
+        agent_pool_type: ${environment.agent_pool_type}
+        agent_pool_name: ${environment.agent_pool_name}
+        environment_name: ${environment.environment_name}
+        dependent_environment: ${environment.dependent_environment}
+%{ endfor ~}

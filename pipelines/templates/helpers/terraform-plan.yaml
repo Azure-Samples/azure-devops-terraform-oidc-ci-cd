@@ -10,14 +10,14 @@ parameters:
 
 steps:
   - task: AzureCLI@2
-    displayName: Terraform Plan for $${{ coalesce(parameters.terraform_action, 'Apply') }}
+    displayName: Terraform Plan for ${{ coalesce(parameters.terraform_action, 'Apply') }}
     inputs:
-      azureSubscription: $${{ parameters.serviceConnection }}
+      azureSubscription: ${{ parameters.serviceConnection }}
       scriptType: pscore
       scriptLocation: inlineScript
       addSpnToEnvironment: true
       inlineScript: |
-        $additionalVariables = ConvertFrom-Json '$${{ parameters.additionalVariables }}'
+        $additionalVariables = ConvertFrom-Json '${{ parameters.additionalVariables }}'
         foreach($var in $additionalVariables.PSObject.Properties) {
           if($var.Name.StartsWith("TF_VAR_")) {
             Write-Host "Setting: $($var.Name) = $($var.Value)"
@@ -42,7 +42,7 @@ steps:
         # Run Terraform Plan
         $command = "terraform"
         $arguments = @()
-        $arguments += "-chdir=$${{ parameters.root_module_folder_relative_path }}"
+        $arguments += "-chdir=${{ parameters.root_module_folder_relative_path }}"
         $arguments += "plan"
         $arguments += "-out=tfplan"
         $arguments += "-input=false"
@@ -55,4 +55,4 @@ steps:
         & $command $arguments
 
     env:
-      TERRAFORM_ACTION: $${{ coalesce(parameters.terraform_action, 'apply') }}
+      TERRAFORM_ACTION: ${{ coalesce(parameters.terraform_action, 'apply') }}

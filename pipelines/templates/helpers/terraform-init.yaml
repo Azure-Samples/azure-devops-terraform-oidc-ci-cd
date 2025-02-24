@@ -13,7 +13,7 @@ steps:
   - task: AzureCLI@2
     displayName: 'Terraform Init'
     inputs:
-      azureSubscription: $${{ parameters.serviceConnection }}
+      azureSubscription: ${{ parameters.serviceConnection }}
       scriptType: pscore
       scriptLocation: inlineScript
       addSpnToEnvironment: true
@@ -33,7 +33,7 @@ steps:
         $env:ARM_USE_AZUREAD = "true"
 
         $arguments = @()
-        $arguments += "-chdir=$${{ parameters.root_module_folder_relative_path }}"
+        $arguments += "-chdir=${{ parameters.root_module_folder_relative_path }}"
         $arguments += "init"
         $arguments += "-backend-config=storage_account_name=$($env:BACKEND_AZURE_STORAGE_ACCOUNT_NAME)"
         $arguments += "-backend-config=container_name=$($env:BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)"
@@ -46,7 +46,7 @@ steps:
         & $command $arguments
 
     env:
-      BACKEND_AZURE_RESOURCE_GROUP_NAME: $${{ parameters.backendAzureResourceGroupName }}
-      BACKEND_AZURE_STORAGE_ACCOUNT_NAME: $${{ parameters.backendAzureStorageAccountName }}
-      BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME: $${{ parameters.backendAzureStorageAccountContainerName }}
-      BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_KEY_NAME: $${{ parameters.backendAzureStorageAccountContainerKeyName }}
+      BACKEND_AZURE_RESOURCE_GROUP_NAME: ${{ parameters.backendAzureResourceGroupName }}
+      BACKEND_AZURE_STORAGE_ACCOUNT_NAME: ${{ parameters.backendAzureStorageAccountName }}
+      BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME: ${{ parameters.backendAzureStorageAccountContainerName }}
+      BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_KEY_NAME: ${{ parameters.backendAzureStorageAccountContainerKeyName }}

@@ -8,9 +8,9 @@ parameters:
 
 steps:
   - task: AzureCLI@2
-    displayName: Terraform Apply for $${{ coalesce(parameters.terraform_action, 'Apply') }}
+    displayName: Terraform Apply for ${{ coalesce(parameters.terraform_action, 'Apply') }}
     inputs:
-      azureSubscription: $${{ parameters.serviceConnection }}
+      azureSubscription: ${{ parameters.serviceConnection }}
       scriptType: pscore
       scriptLocation: inlineScript
       addSpnToEnvironment: true
@@ -33,7 +33,7 @@ steps:
         # Run Terraform Apply
         $command = "terraform"
         $arguments = @()
-        $arguments += "-chdir=$${{ parameters.root_module_folder_relative_path }}"
+        $arguments += "-chdir=${{ parameters.root_module_folder_relative_path }}"
         $arguments += "apply"
         $arguments += "-auto-approve"
         $arguments += "tfplan"

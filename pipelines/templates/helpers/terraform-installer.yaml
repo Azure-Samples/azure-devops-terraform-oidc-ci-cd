@@ -111,5 +111,5 @@ steps:
 
     displayName: Install Terraform
     env:
-      TF_VERSION: $${{ parameters.terraformVersion }}
+      TF_VERSION: ${{ parameters.terraformVersion }}
       TOOLS_PATH: $(Agent.ToolsDirectory)
