@@ -34,10 +34,6 @@ locals {
 
   main_repository_files = merge(local.files, local.pipeline_main_files)
 
-  pipeline_template_replacements = {
-    environments = local.environment_replacements
-  }
-
   pipeline_template_folder = "${path.module}/../pipelines/templates"
   pipeline_template_files = { for file in fileset(local.pipeline_template_folder, "**") : file => {
     name    = file
