@@ -19,7 +19,7 @@ steps:
         $release = $releases[0]
         $TF_VERSION = $releases[0].version
       } else {
-          $versionResponse = Invoke-WebRequest -Uri "https://api.releases.hashicorp.com/v1/releases/terraform/$($version)"
+          $versionResponse = Invoke-WebRequest -Uri "https://api.releases.hashicorp.com/v1/releases/terraform/$($TF_VERSION)"
           if($versionResponse.StatusCode -ne "200") {
               throw "Unable to query Terraform version, please check the supplied version and try again..."
           }
