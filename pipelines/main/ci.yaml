@@ -8,6 +8,12 @@ resources:
       type: git
       name: ${project_name}/${repository_name_templates}
 
+parameters:
+  - name: terraform_cli_version
+    displayName: Terraform CLI Version
+    type: string
+    default: 'latest'
+
 lockBehavior: sequential
 
 extends:
@@ -15,6 +21,7 @@ extends:
   parameters:
     root_module_folder_relative_path: ${root_module_folder_relative_path}
     environments: 
+    terraform_cli_version: $${{ coalesce(parameters.terraform_cli_version, 'latest') }}
 %{ for environment in environments ~}
       - name: ${environment.name}
         display_name: ${environment.display_name}
@@ -26,4 +33,3 @@ extends:
         environment_name: ${environment.environment_name}
         dependent_environment: ${environment.dependent_environment}
 %{ endfor ~}
-    

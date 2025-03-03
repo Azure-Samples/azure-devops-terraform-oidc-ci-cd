@@ -49,4 +49,16 @@ module "storage_account" {
     private_dns_zone_resource_ids = [module.private_dns_zone_storage_account[0].resource_id]
     }
   } : {}
+
+  # Required for this issue: https://github.com/hashicorp/terraform/issues/36595
+  role_assignments = {
+    reader_plan = {
+      role_definition_id_or_name = "Reader"
+      principal_id               = module.user_assigned_managed_identity["${env_key}-plan"].principal_id
+    }
+    reader_apply = {
+      role_definition_id_or_name = "Reader"
+      principal_id               = module.user_assigned_managed_identity["${env_key}-apply"].principal_id
+    }
+  }
 }
