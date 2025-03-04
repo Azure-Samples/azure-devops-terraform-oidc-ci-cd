@@ -1,6 +1,6 @@
 resource "azuredevops_group" "this" {
   scope        = local.azure_devops_project_id
-  display_name = "approvers-${var.postfix}"
+  display_name = local.resource_names.group_name
   description  = "Approvers for the Terraform Apply"
 }
 

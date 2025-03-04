@@ -7,6 +7,8 @@ parameters:
     default: '.'
   - name: additionalVariables
     default: '{}'
+  - name: varFilePath
+    default: ''
 
 steps:
   - task: AzureCLI@2
@@ -24,6 +26,8 @@ steps:
             [System.Environment]::SetEnvironmentVariable($var.Name, $var.Value)
           }
         }
+
+        $varFilePath = "${{ parameters.varFilePath }}"
 
         # Get settings from service connection
         az account show 2>$null | ConvertFrom-Json | Set-Variable account
@@ -44,6 +48,11 @@ steps:
         $arguments = @()
         $arguments += "-chdir=${{ parameters.root_module_folder_relative_path }}"
         $arguments += "plan"
+
+        if($varFilePath -ne "") {
+          $arguments += "-var-file=$varFilePath"
+        }
+
         $arguments += "-out=tfplan"
         $arguments += "-input=false"
 

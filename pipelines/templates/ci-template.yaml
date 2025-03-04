@@ -75,6 +75,7 @@ stages:
                       serviceConnection: ${{ environment.service_connection_name_plan }}
                       root_module_folder_relative_path: ${{ parameters.root_module_folder_relative_path }}
                       additionalVariables: $(ADDITIONAL_ENVIRONMENT_VARIABLES)
+                      varFilePath: $(VAR_FILE_PATH)
                   - pwsh: |
                       terraform -chdir="${{ parameters.root_module_folder_relative_path }}" show -json tfplan > tfplan.json
                       $planJson = Get-Content -Raw tfplan.json

@@ -1,62 +1,54 @@
-data "azurerm_resource_group" "example" {
-  name = var.resource_group_name
+module "resource_group" {
+  count    = var.resource_group_create ? 1 : 0
+  source   = "Azure/avm-res-resources-resourcegroup/azurerm"
+  version  = "0.2.1"
+  location = var.location
+  name     = local.resource_names.resource_group_name
+  tags     = var.tags
 }
 
-resource "azurerm_virtual_network" "example" {
-  name                = "example-network"
-  address_space       = ["10.0.0.0/16"]
-  location            = data.azurerm_resource_group.example.location
-  resource_group_name = data.azurerm_resource_group.example.name
+module "virtual_network" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.8.1"
+
+  resource_group_name = local.resource_group_name
+  location = var.location
+  name                = local.resource_names.virtual_network_name
+  subnets             = var.virtual_network_subnets
+  address_space       = var.virtual_network_address_space
+  tags                = var.tags
 }
 
-resource "azurerm_subnet" "example" {
-  name                 = "internal"
-  resource_group_name  = data.azurerm_resource_group.example.name
-  virtual_network_name = azurerm_virtual_network.example.name
-  address_prefixes     = ["10.0.2.0/24"]
-}
+module "virtual_machine" {
+  source  = "Azure/avm-res-compute-virtualmachine/azurerm"
+  version = "0.18.0"
 
-resource "azurerm_network_interface" "example" {
-  name                = "example-nic"
-  location            = data.azurerm_resource_group.example.location
-  resource_group_name = data.azurerm_resource_group.example.name
+  resource_group_name        = local.resource_group_name
+  os_type                    = "linux"
+  name                       = local.resource_names.virtual_machine_name
+  sku_size                   = var.virtual_machine_sku
+  location                   = var.location
+  zone                       = "1"
+  encryption_at_host_enabled = false
 
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.example.id
-    private_ip_address_allocation = "Dynamic"
-  }
-}
-
-resource "tls_private_key" "main" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "azurerm_linux_virtual_machine" "example" {
-  name                = "example-machine"
-  resource_group_name = data.azurerm_resource_group.example.name
-  location            = data.azurerm_resource_group.example.location
-  size                = "Standard_B1ls"
-  admin_username      = "adminuser"
-  network_interface_ids = [
-    azurerm_network_interface.example.id,
-  ]
-
-  admin_ssh_key {
-    username   = "adminuser"
-    public_key = tls_private_key.main.public_key_openssh
-  }
-
-  os_disk {
-    caching = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
-  source_image_reference {
+  source_image_reference = {
     publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
     version   = "latest"
   }
+
+  network_interfaces = {
+    private = {
+      name = local.resource_names.network_interface_name
+      ip_configurations = {
+        private = {
+          name                          = local.resource_names.network_interface_name
+          private_ip_subnet_resource_id = module.virtual_network.subnets["example"].resource_id
+        }
+      }
+    }
+  }
+
+  tags = var.tags
 }

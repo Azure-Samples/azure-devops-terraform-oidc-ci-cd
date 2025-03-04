@@ -48,7 +48,7 @@ resource "azuredevops_check_required_template" "this" {
     for_each = { for template in each.value.required_templates : template => template }
     content {
       repository_type = "azuregit"
-      repository_name = "${var.azure_devops_project}/${azuredevops_git_repository.template.name}"
+      repository_name = "${local.azure_devops_project_name}/${azuredevops_git_repository.template.name}"
       repository_ref  = local.default_branch
       template_path   = required_template.value
     }

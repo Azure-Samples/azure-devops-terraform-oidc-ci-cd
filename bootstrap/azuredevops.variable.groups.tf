@@ -13,6 +13,11 @@ resource "azuredevops_variable_group" "this" {
   }
 
   variable {
+    name = "VAR_FILE_PATH"
+    value = "./config/${each.key}.tfvars"
+  }
+
+  variable {
     name  = "BACKEND_AZURE_RESOURCE_GROUP_NAME"
     value = module.resource_group["state"].name
   }

@@ -1,19 +1,19 @@
 locals {
   resource_groups = merge({
     state = {
-      name = "rg-${var.postfix}-state"
+      name = local.resource_names.resource_group_state_name
     }
     identity = {
-      name = "rg-${var.postfix}-identity"
+      name = local.resource_names.resource_group_identity_name
     }
     }, var.use_self_hosted_agents ? {
     agents = {
-      name = "rg-${var.postfix}-agents"
+      name = local.resource_names.resource_group_agents_name
     }
   } : {})
 
-  resource_groups_environments = { for env_key, env_value in var.environments : env_key => {
-    name = "rg-${var.postfix}-env-${env_key}"
+  resource_groups_environments = { for env_key, env_value in local.environments : env_key => {
+    name = env_value.resource_group_name
     role_assignments = {
       reader = {
         role_definition_id_or_name = "Reader"

@@ -4,9 +4,11 @@ parameters:
     default: 'latest'
 
 steps:
-  - pwsh: |
+  - pwsh: | 
       $TF_VERSION = $env:TF_VERSION
       $TOOLS_PATH = $env:TOOLS_PATH
+
+      Write-Host "Requested Terraform CLI version: $TF_VERSION"
 
       $release = $null
 
@@ -121,9 +123,9 @@ steps:
       }
       Write-Host "##vso[task.setvariable variable=PATH]$env:PATH"
       Remove-Item $zipfilePath
-      Write-Host "Installed Terraform version $TF_VERSION"
+      Write-Host "Installed Terraform CLI version: $TF_VERSION"
 
     displayName: Install Terraform
     env:
-      TF_VERSION: $${{ parameters.terraformVersion }}
+      TF_VERSION: ${{ parameters.terraformVersion }}
       TOOLS_PATH: $(Agent.ToolsDirectory)

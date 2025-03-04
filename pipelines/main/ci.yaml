@@ -20,8 +20,8 @@ extends:
   template: ${ci_template_path}@templates
   parameters:
     root_module_folder_relative_path: ${root_module_folder_relative_path}
-    environments: 
     terraform_cli_version: $${{ coalesce(parameters.terraform_cli_version, 'latest') }}
+    environments: 
 %{ for environment in environments ~}
       - name: ${environment.name}
         display_name: ${environment.display_name}

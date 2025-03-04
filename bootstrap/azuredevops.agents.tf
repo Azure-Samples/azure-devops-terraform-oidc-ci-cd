@@ -1,6 +1,6 @@
 resource "azuredevops_agent_pool" "this" {
   count          = var.use_self_hosted_agents ? 1 : 0
-  name           = "ado-agent-${lower(var.postfix)}"
+  name           = local.resource_names.agent_pool_name
   auto_provision = false
   auto_update    = true
 }

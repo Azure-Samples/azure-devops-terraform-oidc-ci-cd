@@ -51,6 +51,7 @@ stages:
                       serviceConnection: ${{ environment.service_connection_name_plan }}
                       root_module_folder_relative_path: ${{ parameters.root_module_folder_relative_path }}
                       additionalVariables: $(ADDITIONAL_ENVIRONMENT_VARIABLES)
+                      varFilePath: $(VAR_FILE_PATH)
                   - task: CopyFiles@2
                     displayName: Create Module Artifact
                     inputs:

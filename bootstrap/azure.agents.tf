@@ -6,7 +6,9 @@ module "azure_devops_agents" {
 
   resource_group_creation_enabled               = false
   resource_group_name                           = module.resource_group["agents"].name
-  postfix                                       = lower(replace(var.postfix, "-", ""))
+  postfix                                       = local.resource_names.agent_compute_postfix_name
+  container_instance_name_prefix                = local.resource_names.container_instance_prefix_name
+  container_registry_name                       = local.resource_names.container_registry_name
   location                                      = var.location
   compute_types                                 = [var.self_hosted_agent_type]
   container_instance_count                      = 4

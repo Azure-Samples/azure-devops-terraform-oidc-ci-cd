@@ -19,7 +19,7 @@ locals {
 
   pipeline_main_replacements = {
     environments                     = local.environment_replacements
-    project_name                     = var.azure_devops_project
+    project_name                     = local.azure_devops_project_name
     repository_name_templates        = azuredevops_git_repository.template.name
     cd_template_path                 = "cd-template.yaml"
     ci_template_path                 = "ci-template.yaml"

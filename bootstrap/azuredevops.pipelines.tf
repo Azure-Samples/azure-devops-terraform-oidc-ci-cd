@@ -1,7 +1,7 @@
 locals {
   pipelines = {
     ci = {
-      name      = "01 - Conitnuous Integration"
+      name      = "01 - Continuous Integration"
       file_path = "ci.yaml"
     }
     cd = {

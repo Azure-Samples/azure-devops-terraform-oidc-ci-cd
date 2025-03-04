@@ -5,7 +5,7 @@ locals {
 resource "azuredevops_git_repository" "this" {
   depends_on     = [azuredevops_environment.this]
   project_id     = local.azure_devops_project_id
-  name           = local.repository_name
+  name           = local.resource_names.repository_main_name
   default_branch = local.default_branch
   initialization {
     init_type = "Clean"
@@ -15,7 +15,7 @@ resource "azuredevops_git_repository" "this" {
 resource "azuredevops_git_repository" "template" {
   depends_on     = [azuredevops_environment.this]
   project_id     = local.azure_devops_project_id
-  name           = local.repository_name_template
+  name           = local.resource_names.repository_template_name
   default_branch = local.default_branch
   initialization {
     init_type = "Clean"

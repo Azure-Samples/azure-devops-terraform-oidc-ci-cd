@@ -108,9 +108,8 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
 1. In the `terraform.tfvars` file add the following:
 
     ```terraform
-    postfix              = "<your_initials>-<date_as_YYYYMMDD>"
+    location             = "<azure_location>"
     organization_name    = "<your_azure_devops_organisation_name>"
-    azure_devops_project = "<your_azure_devops_project_name>"
     # You can omit this is you don't want to demo approvals on the production environment. Remove this whole approvers block to omit.
     approvers = {
       user1 = "<your_azure_devops_username>"
@@ -120,9 +119,8 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
     e.g.
 
     ```terraform
-    postfix              = "JFH-20221208"
+    location             = "uksouth"
     organization_name    = "my-organization"
-    azure_devops_project = "my-project"
     approvers = {
       user1 = "demouser@example.com"
     }
@@ -162,7 +160,7 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
 
 1. Login to the [Azure Portal](https://portal.azure.com) with your Global Administrator account.
 1. Navigate to your Subscription and select `Resource groups`.
-1. Click the resource group post-fixed `identity` (e.g. `rg-JFH-20221208-identity`).
+1. Click the resource group with `identity` (e.g. `rg-dema-identity-mgt-uksouth-001`).
 1. You should see 6 newly created User Assigned Managed Identities, 2 per environment.
 1. Look for a `Managed Identity` resource post-fixed with `dev-plan` and click it.
 
@@ -175,7 +173,7 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
 
 1. Navigate to your Subscription and select `Resource groups`.
 1. You should see four newly created resource groups.
-1. Click the resource group post-fixed `dev` (e.g. `rg-JFH-20221208-env-dev`).
+1. Click the resource group with `env-dev` (e.g. `rg-dema-env-dev-uksouth-001`)
 1. Select `Access control (IAM)` and select `Role assignments`.
 1. Under the `Reader` role, you should see that your `dev-plan` Managed Identity has been granted access directly to the resource group.
 1. Under the `Contributor` role, you should see that your `dev-apply` Managed Identity has been granted access directly to the resource group.
@@ -183,7 +181,7 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
 #### State storage account
 
 1. Navigate to your Subscription and select `Resource groups`.
-1. Click the resource group post-fixed `state` (e.g. `rg-JFH-20221208-state`).
+1. Click the resource group with `state` (e.g. `rg-dema-state-mgt-uksouth-001`).
 1. You should see a single storage account in there, click on it.
 1. Select `Containers`. You should see a `dev`, `test` and `prod` container.
 1. Select the `dev` container.
@@ -194,13 +192,13 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
 
 1. Open Azure DevOps in your browser (login if you need to).
 1. Navigate to your organisation and project.
-1. Click `Repos`, then select your new repo in the drop down at the top of the page (e.g. `JFH-20221208-demo`). Click on it.
+1. Click `Repos`, then select your new repo in the drop down at the top of the page (e.g. `dema-mgt-main`). Click on it.
 1. You should see some files under source control.
 
 #### Azure DevOps Template Repository
 
 1. Navigate to your organisation and project.
-1. Click `Repos`, then select your new repo in the drop down at the top of the page (e.g. `JFH-20221208-demo-template`). Click on it.
+1. Click `Repos`, then select your new repo in the drop down at the top of the page (e.g. `dema-mgt-template`). Click on it.
 1. You should see some files under source control.
 
 #### Azure DevOps Environments
