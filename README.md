@@ -249,19 +249,14 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
 
 1. Clone your new repository and open it in Visual Studio Code.
 1. Create a new branch, call it whatever you want.
-1. Open the `main.tf` file.
-1. Add tags to the virtual network resource.
+1. Open the `config/dev.tfvars` file.
+1. Add a new tag:
 
     ```terraform
-    resource "azurerm_virtual_network" "example" {
-      name                = "example-network"
-      address_space       = ["10.0.0.0/16"]
-      location            = data.azurerm_resource_group.example.location
-      resource_group_name = data.azurerm_resource_group.example.name
-      tags = {
-        environment = "dev"
-        costcentre  = "1234"
-      }
+    tags = {
+      deployed_by = "terraform"
+      environment = "dev"
+      owner       = "Fred Bloggs"
     }
     ```
 
