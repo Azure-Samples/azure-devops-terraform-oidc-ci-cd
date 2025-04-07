@@ -13,7 +13,7 @@ resource "azuredevops_variable_group" "this" {
   }
 
   variable {
-    name = "VAR_FILE_PATH"
+    name  = "VAR_FILE_PATH"
     value = "./config/${each.key}.tfvars"
   }
 

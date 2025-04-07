@@ -7,6 +7,12 @@ resource "azuredevops_group" "this" {
 data "azuredevops_users" "this" {
   for_each       = var.approvers
   principal_name = each.value
+  lifecycle {
+    postcondition {
+      condition     = length(self.users) > 0
+      error_message = "No user account found for ${each.value}, check you have entered a valid user principal name..."
+    }
+  }
 }
 
 locals {

@@ -24,6 +24,7 @@ module "storage_account" {
   account_tier                  = "Standard"
   account_replication_type      = "ZRS"
   public_network_access_enabled = !var.use_self_hosted_agents
+  network_rules                 = var.use_self_hosted_agents ? {} : null
 
   containers = { for env_key, env_value in var.environments : env_key => {
     name          = env_key
@@ -54,5 +55,5 @@ module "storage_account" {
   role_assignments = { for key, value in module.user_assigned_managed_identity : key => {
     role_definition_id_or_name = "Reader"
     principal_id               = value.principal_id
-  }}
+  } }
 }
