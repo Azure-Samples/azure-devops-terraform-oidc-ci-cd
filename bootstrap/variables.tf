@@ -117,7 +117,7 @@ variable "organization_name" {
 }
 
 variable "azure_devops_project" {
-  type = string
+  type    = string
   default = null
 }
 

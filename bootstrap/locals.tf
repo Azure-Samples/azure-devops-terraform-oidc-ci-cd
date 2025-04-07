@@ -30,7 +30,7 @@ locals {
       sequence    = local.name_replacements.sequence
     })
     user_assigned_managed_identity_name_template = value.user_assigned_managed_identity_name_template
-  }}
+  } }
   environment_split_type = {
     plan  = "plan"
     apply = "apply"
