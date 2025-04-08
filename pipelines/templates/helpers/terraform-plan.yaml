@@ -17,7 +17,6 @@ steps:
       azureSubscription: ${{ parameters.serviceConnection }}
       scriptType: pscore
       scriptLocation: inlineScript
-      addSpnToEnvironment: true
       inlineScript: |
         $additionalVariables = ConvertFrom-Json '${{ parameters.additionalVariables }}'
         foreach($var in $additionalVariables.PSObject.Properties) {
@@ -32,15 +31,14 @@ steps:
         # Get settings from service connection
         az account show 2>$null | ConvertFrom-Json | Set-Variable account
         $clientId = $account.user.name
-        $oidcToken = $env:idToken # requires addSpnToEnvironment: true
         $subscriptionId = $account.id
         $tenantId = $account.tenantId
 
         $env:ARM_TENANT_ID = $account.tenantId
         $env:ARM_SUBSCRIPTION_ID = $account.id
-        $env:ARM_OIDC_TOKEN = $oidcToken
-        $env:ARM_USE_OIDC = "true"
         $env:ARM_CLIENT_ID = $clientId
+        $env:ARM_OIDC_AZURE_SERVICE_CONNECTION_ID = $env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID
+        $env:ARM_USE_OIDC = "true"
         $env:ARM_USE_AZUREAD = "true"
 
         # Run Terraform Plan

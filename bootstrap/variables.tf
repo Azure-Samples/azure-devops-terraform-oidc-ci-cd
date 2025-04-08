@@ -188,3 +188,9 @@ variable "repository_postfix_template" {
   type    = string
   default = "demo-template"
 }
+
+variable "agent_use_availability_zones" {
+  type        = bool
+  default     = false
+  description = "Use availability zones for the agent pool if using contaienr instances. This is off by default due to faults in various regions at time of authoring."
+}
