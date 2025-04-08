@@ -21,7 +21,7 @@ module "virtual_network" {
 
 module "virtual_machine" {
   source  = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version = "0.18.0"
+  version = "0.18.1"
 
   resource_group_name        = local.resource_group_name
   os_type                    = "linux"

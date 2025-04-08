@@ -21,6 +21,6 @@ module "azure_devops_agents" {
   container_app_subnet_id                       = module.virtual_network[0].subnets["agents"].resource_id
   container_instance_subnet_id                  = module.virtual_network[0].subnets["agents"].resource_id
   container_registry_private_endpoint_subnet_id = module.virtual_network[0].subnets["private_endpoints"].resource_id
-  container_instance_use_availability_zones     = false
+  container_instance_use_availability_zones     = var.agent_use_availability_zones
   depends_on                                    = [azuredevops_pipeline_authorization.service_connection, azuredevops_pipeline_authorization.environment, azuredevops_pipeline_authorization.agent_pool]
 }
