@@ -11,6 +11,20 @@ variable "location" {
   }
 }
 
+variable "resource_name_location_short" {
+  type        = string
+  description = "The short name segment for the location"
+  default     = ""
+  validation {
+    condition     = length(var.resource_name_location_short) == 0 || can(regex("^[a-z]+$", var.resource_name_location_short))
+    error_message = "The short name segment for the location must only contain lowercase letters"
+  }
+  validation {
+    condition     = length(var.resource_name_location_short) <= 3
+    error_message = "The short name segment for the location must be 3 characters or less"
+  }
+}
+
 variable "resource_name_workload" {
   type        = string
   description = "The name segment for the workload"
@@ -60,7 +74,7 @@ variable "resource_name_templates" {
     network_security_group_name           = "nsg-$${workload}-$${environment}-$${location}-$${sequence}"
     nat_gateway_name                      = "nat-$${workload}-$${environment}-$${location}-$${sequence}"
     nat_gateway_public_ip_name            = "pip-nat-$${workload}-$${environment}-$${location}-$${sequence}"
-    storage_account_name                  = "sto$${workload}$${environment}$${location}$${sequence}$${uniqueness}"
+    storage_account_name                  = "sto$${workload}$${environment}$${location_short}$${sequence}$${uniqueness}"
     storage_account_private_endpoint_name = "pe-sto-$${workload}-$${environment}-$${location}-$${sequence}"
     agent_compute_postfix_name            = "$${workload}-$${environment}-$${location}-$${sequence}"
     container_instance_prefix_name        = "aci-$${workload}-$${environment}-$${location}"
