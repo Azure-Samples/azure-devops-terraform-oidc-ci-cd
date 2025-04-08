@@ -18,11 +18,6 @@ resource "azuredevops_variable_group" "this" {
   }
 
   variable {
-    name  = "BACKEND_AZURE_RESOURCE_GROUP_NAME"
-    value = module.resource_group["state"].name
-  }
-
-  variable {
     name  = "BACKEND_AZURE_STORAGE_ACCOUNT_NAME"
     value = module.storage_account.name
   }

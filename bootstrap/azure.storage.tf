@@ -31,11 +31,11 @@ module "storage_account" {
     public_access = "None"
     role_assignments = {
       user_assignment_managed_identity-plan = {
-        role_definition_id_or_name = "Storage Blob Data Owner"
+        role_definition_id_or_name = "Storage Blob Data Contributor"
         principal_id               = module.user_assigned_managed_identity["${env_key}-plan"].principal_id
       }
       user_assignment_managed_identity-apply = {
-        role_definition_id_or_name = "Storage Blob Data Owner"
+        role_definition_id_or_name = "Storage Blob Data Contributor"
         principal_id               = module.user_assigned_managed_identity["${env_key}-apply"].principal_id
       }
     }
@@ -50,10 +50,4 @@ module "storage_account" {
     private_dns_zone_resource_ids = [module.private_dns_zone_storage_account[0].resource_id]
     }
   } : {}
-
-  # Required for this issue: https://github.com/hashicorp/terraform/issues/36595
-  role_assignments = { for key, value in module.user_assigned_managed_identity : key => {
-    role_definition_id_or_name = "Reader"
-    principal_id               = value.principal_id
-  } }
 }
