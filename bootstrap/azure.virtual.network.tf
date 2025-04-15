@@ -23,6 +23,7 @@ locals {
 module "virtual_network" {
   source              = "Azure/avm-res-network-virtualnetwork/azurerm"
   version             = "0.8.1"
+  enable_telemetry    = false
   count               = var.use_self_hosted_agents ? 1 : 0
   name                = local.resource_names.virtual_network_name
   location            = var.location

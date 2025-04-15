@@ -1,6 +1,7 @@
 module "azure_devops_agents" {
-  source  = "Azure/avm-ptn-cicd-agents-and-runners/azurerm"
-  version = "0.3.2"
+  source           = "Azure/avm-ptn-cicd-agents-and-runners/azurerm"
+  version          = "0.3.2"
+  enable_telemetry = false
 
   count = var.use_self_hosted_agents ? 1 : 0
 

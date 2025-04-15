@@ -1,6 +1,7 @@
 module "user_assigned_managed_identity" {
-  source  = "Azure/avm-res-managedidentity-userassignedidentity/azurerm"
-  version = "0.3.3"
+  source           = "Azure/avm-res-managedidentity-userassignedidentity/azurerm"
+  version          = "0.3.3"
+  enable_telemetry = false
 
   for_each            = local.environment_split
   location            = var.location

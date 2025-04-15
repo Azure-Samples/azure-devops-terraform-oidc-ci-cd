@@ -1,6 +1,7 @@
 module "private_dns_zone_storage_account" {
-  source  = "Azure/avm-res-network-privatednszone/azurerm"
-  version = "0.3.2"
+  source           = "Azure/avm-res-network-privatednszone/azurerm"
+  version          = "0.3.2"
+  enable_telemetry = false
 
   count = var.use_self_hosted_agents ? 1 : 0
 
@@ -18,6 +19,7 @@ module "private_dns_zone_storage_account" {
 module "storage_account" {
   source                        = "Azure/avm-res-storage-storageaccount/azurerm"
   version                       = "0.5.0"
+  enable_telemetry              = false
   name                          = local.resource_names.storage_account_name
   location                      = var.location
   resource_group_name           = module.resource_group["state"].name
