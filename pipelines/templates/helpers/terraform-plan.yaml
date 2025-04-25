@@ -29,18 +29,14 @@ steps:
         $varFilePath = "${{ parameters.varFilePath }}"
 
         # Get settings from service connection
-        az account show 2>$null | ConvertFrom-Json | Set-Variable account
+        $subscriptionId = $(az account show --query id -o tsv)
 
         # Logout of Azure CLI to prove we are not using that auth method
         az logout
 
-        $clientId = $account.user.name
-        $subscriptionId = $account.id
-        $tenantId = $account.tenantId
-
-        $env:ARM_TENANT_ID = $account.tenantId
-        $env:ARM_SUBSCRIPTION_ID = $account.id
-        $env:ARM_CLIENT_ID = $clientId
+        $env:ARM_TENANT_ID = $env:AZURESUBSCRIPTION_TENANT_ID
+        $env:ARM_SUBSCRIPTION_ID = $subscriptionId
+        $env:ARM_CLIENT_ID =  $env:AZURESUBSCRIPTION_CLIENT_ID
         $env:ARM_OIDC_AZURE_SERVICE_CONNECTION_ID = $env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID
         $env:ARM_USE_OIDC = "true"
 
