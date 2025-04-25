@@ -16,6 +16,10 @@ steps:
       inlineScript: |
         # Get settings from service connection
         az account show 2>$null | ConvertFrom-Json | Set-Variable account
+
+        # Logout of Azure CLI to prove we are not using that auth method
+        az logout
+
         $clientId = $account.user.name
         $subscriptionId = $account.id
         $tenantId = $account.tenantId
@@ -36,3 +40,6 @@ steps:
         $arguments += "tfplan"
         Write-Host "Running: $command $arguments"
         & $command $arguments
+
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
