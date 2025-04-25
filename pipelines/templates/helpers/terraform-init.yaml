@@ -31,7 +31,6 @@ steps:
         $env:ARM_CLIENT_ID = $clientId
         $env:ARM_OIDC_AZURE_SERVICE_CONNECTION_ID = $env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID
         $env:ARM_USE_OIDC = "true"
-        $env:ARM_USE_AZUREAD = "true"
 
         $arguments = @()
         $arguments += "-chdir=${{ parameters.root_module_folder_relative_path }}"
@@ -39,6 +38,7 @@ steps:
         $arguments += "-backend-config=storage_account_name=$($env:BACKEND_AZURE_STORAGE_ACCOUNT_NAME)"
         $arguments += "-backend-config=container_name=$($env:BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)"
         $arguments += "-backend-config=key=$($env:BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_KEY_NAME)"
+        $arguments += "-backend-config=use_azuread_auth=true"
 
         # Run terraform init
         $command = "terraform"
@@ -50,4 +50,4 @@ steps:
       BACKEND_AZURE_STORAGE_ACCOUNT_NAME: ${{ parameters.backendAzureStorageAccountName }}
       BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME: ${{ parameters.backendAzureStorageAccountContainerName }}
       BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_KEY_NAME: ${{ parameters.backendAzureStorageAccountContainerKeyName }}
-      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      ARM_OIDC_REQUEST_TOKEN: $(System.AccessToken)
