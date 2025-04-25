@@ -43,6 +43,7 @@ steps:
         $env:ARM_CLIENT_ID = $clientId
         $env:ARM_OIDC_AZURE_SERVICE_CONNECTION_ID = $env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID
         $env:ARM_OIDC_REQUEST_URL = $env:SYSTEM_OIDCREQUESTURI  # Temporary fix for AzAPI issue (https://github.com/Azure/terraform-provider-azapi/pull/852)
+        $env:ARM_OIDC_REQUEST_TOKEN = $env:SYSTEM_ACCESSTOKEN  # Temporary fix for AzAPI issue (https://github.com/Azure/terraform-provider-azapi/pull/852)
         $env:ARM_USE_OIDC = "true"
         $env:ARM_USE_AZUREAD = "true"
 
