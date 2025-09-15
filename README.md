@@ -69,7 +69,7 @@ This lab has the following phases:
 
 ### Bootstrap Overview and Best Practices
 
-This demo lab creates and is scoped to resource groups. This is to ensure the lab only requires a single subscription and can be run by anyone without the overhead of creating multiple subscriptions. However, for a production scenario we recommend scoping to subscriptions and using [subscription demoncratization](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-principles#subscription-democratization).
+This demo lab creates and is scoped to resource groups. This is to ensure the lab only requires a single subscription and can be run by anyone without the overhead of creating multiple subscriptions. However, for a production scenario we recommend scoping to subscriptions and using [subscription democratization](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-principles#subscription-democratization).
 
 The bootstrap implements a number of best practices for Terraform in Azure DevOps that you should take note of as you run through the lab:
 
@@ -206,7 +206,7 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
 1. Hover over `Pipelines`, then select `Environments`.
 1. You should see 3 environments called `dev`, `test` and `prod`.
 1. Click on the `dev` environment and take a look at the settings.
-1. Note the exclusive lock on the environment, this stops parralel deployments from planning at the same time as another plan and apply.
+1. Note the exclusive lock on the environment, this stops parallel deployments from planning at the same time as another plan and apply.
 
 #### Azure DevOps Variable Group
 
