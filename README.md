@@ -186,7 +186,7 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
 1. Select `Containers`. You should see a `dev`, `test` and `prod` container.
 1. Select the `dev` container.
 1. Click `Access Control (IAM)` and select `Role assignments`.
-1. Scroll down to `Storage Blob Data Owner`. You should see your `dev-plan` and `dev-apply` Managed Identities have been assigned that role.
+1. Scroll down to `Storage Blob Data Contributor`. You should see your `dev-plan` and `dev-apply` Managed Identities have been assigned that role.
 
 #### Azure DevOps Repository
 
