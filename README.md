@@ -113,7 +113,7 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
     # You can omit this is you don't want to demo approvals on the production environment. Remove this whole approvers block to omit.
     approvers = {
       user1 = "<your_azure_devops_username>"
-    }  
+    }
     ```
 
     e.g.
@@ -145,7 +145,6 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
 1. Open the Visual Studio Code Terminal and navigate the `bootstrap` folder.
 1. Run `az login -T "<tenant_id>"` and follow the prompts to login to Azure with your account.
 1. Run `az account show`. If you are not connected to you test subscription, change it by running `az account set --subscription "<subscription-id>"`
-1. Run `$env:ARM_SUBSCRIPTION_ID = $(az account show --query id -o tsv)` to set the subscription id required by azurerm provider v4.
 1. Run `$env:TF_VAR_personal_access_token = "<your_pat>"` to set the PAT you generated earlier.
 1. Run `terraform init`.
 1. Run `terraform plan -out tfplan`.
@@ -240,7 +239,7 @@ The bootstrap implements a number of best practices for Terraform in Azure DevOp
 1. Select `Pipelines`, then click on the `02 - Continuous Delivery` pipeline you created.
 1. Click the `Run pipeline` in the top right, then click `Run` in the dialog.
 1. Wait for the run to appear or refresh the screen, then click on the run to see the details.
-1. You will see each environment being deployed one after the other. 
+1. You will see each environment being deployed one after the other.
 1. If you added approver, you'll need to appove the Production apply stage.
 1. Drill into the log for one of the environments and look at the steps that were run.
 1. Run the workflow again and take a look at the log to compare what happens on the Day 2 run.

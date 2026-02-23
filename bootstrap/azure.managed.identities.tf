@@ -9,11 +9,10 @@ module "user_assigned_managed_identity" {
 }
 
 resource "azurerm_federated_identity_credential" "this" {
-  for_each            = local.environment_split
-  parent_id           = module.user_assigned_managed_identity[each.key].resource_id
-  name                = "${var.organization_name}-${local.azure_devops_project_name}-${each.key}"
-  resource_group_name = module.resource_group["identity"].name
-  audience            = [local.default_audience_name]
-  issuer              = azuredevops_serviceendpoint_azurerm.this[each.key].workload_identity_federation_issuer
-  subject             = azuredevops_serviceendpoint_azurerm.this[each.key].workload_identity_federation_subject
+  for_each  = local.environment_split
+  parent_id = module.user_assigned_managed_identity[each.key].resource_id
+  name      = "${var.organization_name}-${local.azure_devops_project_name}-${each.key}"
+  audience  = [local.default_audience_name]
+  issuer    = azuredevops_serviceendpoint_azurerm.this[each.key].workload_identity_federation_issuer
+  subject   = azuredevops_serviceendpoint_azurerm.this[each.key].workload_identity_federation_subject
 }
